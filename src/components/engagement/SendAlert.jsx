@@ -4,7 +4,6 @@ import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { sendAlertSms } from "../../features/quotidien/quotidienSlice";
 import { useAppContext } from "../../context/AppState";
-import { set } from "@project-serum/anchor/dist/cjs/utils/features";
 
 const validationSchema = Yup.object().shape({
   message: Yup.string().required("Ce champ est requis."),
