@@ -1,5 +1,5 @@
 const backend = {
-  API: "http://localhost:8000/api",
+  API: "https://ctam-backend-twr35.ondigitalocean.app/api",
   BACKEND: "http://localhost:8000",
 };
 
