@@ -200,15 +200,15 @@ function FiEntrees() {
     []
   );
 
-  if (isLoading)
-    return (
-      <Container
-        title={"Entrées en caisse"}
-        handleDateRangeChange={handleDateRangeChange}
-      >
-        <WaitingDatas />
-      </Container>
-    );
+  // if (isLoading)
+  //   return (
+  //     <Container
+  //       title={"Entrées en caisse"}
+  //       handleDateRangeChange={handleDateRangeChange}
+  //     >
+  //       <WaitingDatas />
+  //     </Container>
+  //   );
 
   return (
     <Container
