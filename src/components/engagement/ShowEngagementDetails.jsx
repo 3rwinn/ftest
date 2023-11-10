@@ -1,7 +1,10 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 // import Table, { SelectColumnFilter } from "../Table";
-import { getMouvements } from "../../features/engagement/engagementSlice";
+import {
+  getMouvements,
+  newGetMouvements,
+} from "../../features/engagement/engagementSlice";
 // import { useAppContext } from "../../context/AppState";
 // import { getMissions, getPaliers } from "../../features/settings/settingsSlice";
 import { formatNumberToMoney } from "../../utils/helpers";
@@ -14,16 +17,24 @@ import Button from "../common/Button";
 
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import "jspdf-autotable";
+import { ctamTampo } from "../../constants/utils";
+
 import { useAppContext } from "../../context/AppState";
 import SendAlert from "./SendAlert";
+import WaitingDatas from "../WaitingDatas";
 
 function ShowEngagementDetails({ engagementId, engagementData }) {
   const dispatch = useDispatch();
-  const { mouvements } = useSelector((state) => state.engagement);
-  React.useEffect(() => {
-    dispatch(getMouvements());
-  }, []);
+  const { mouvements, loading } = useSelector((state) => state.engagement);
 
+  React.useEffect(() => {
+    // dispatch(getMouvements({start_date: null, end_date: null}));
+    dispatch(newGetMouvements());
+    console.log("TEST", engagementId);
+  }, [engagementId]);
+
+  console.log("mouvements", mouvements);
 
   const {
     // membre__nom,
@@ -36,7 +47,7 @@ function ShowEngagementDetails({ engagementId, engagementData }) {
     // f_palier,
   } = engagementData;
 
-  console.log("engagementData", engagementData);
+  // console.log("engagementData", engagementData);
 
   const { switchModal } = useAppContext();
 
@@ -70,6 +81,87 @@ function ShowEngagementDetails({ engagementId, engagementData }) {
         ).format("DD/MM/YYYY")}.pdf`
       );
     });
+  };
+
+  const newPrint = (missionsDatas) => {
+    const headerStyles = {
+      // fillColor: [166, 51, 32],
+      fillColor: [1, 28, 55],
+    };
+
+    const imageBase64 = ctamTampo;
+    const imageWidth = 30; // Set the width of the image
+    const imageHeight = 30; // Set the height of the image
+
+    const datasWanted = missionsDatas;
+
+    console.log("DATAS WANTED", datasWanted);
+
+    const mycols = ["Date", "Montant"];
+    let mydatas = [];
+    // let total = 0;
+
+    datasWanted.forEach((data) => {
+      mydatas.push([data.f_date, data.f_montant]);
+      // total += data.montant;
+    });
+
+    // mydatas.push(["Total", formatNumberToMoney(total) + " FCFA"]);
+
+    const doc = new jsPDF();
+
+    doc.autoTable({
+      head: [mycols],
+      body: mydatas,
+      headerStyles,
+      // foot: ["Total", formatNumberToMoney(total) + " FCFA"],
+      footStyles: {
+        fillColor: [1, 28, 55],
+        textColor: [255, 255, 255],
+      },
+      willDrawPage: (data) => {
+        doc.addImage(
+          imageBase64,
+          "PNG",
+          data.settings.margin.left, // centerX,
+          10, // centerY,
+          imageWidth,
+          imageHeight
+        );
+        doc.setFontSize(15);
+        doc.text("CTAM - Fiche d'engagement", data.settings.margin.left, 46);
+        doc.setFontSize(10);
+        doc.text(
+          `Nom complet: ${engagementData?.full_name}`,
+          data.settings.margin.left,
+          51
+        );
+        doc.text(
+          `Mission: ${engagementData?.f_mission}`,
+          data.settings.margin.left,
+          57
+        );
+        doc.text(
+          `Contact: ${engagementData?.membre__contact}`,
+          data.settings.margin.left,
+          63
+        );
+        doc.text(`Engagement: ${engagementData?.f_palier} FCFA`, 148, 51);
+        doc.text(`Total versements: ${f_versement} FCFA`, 144, 57);
+        doc.text(`Total restants: ${f_reste} FCFA`, 148, 63);
+        doc.setFontSize(15)
+        doc.text(`Liste des versements`, data.settings.margin.left, 73)
+      },
+      margin: {
+        top: 75,
+      },
+    });
+
+    doc.save(
+      `fiche_engagement_${engagementData.full_name}_${dayjs(Date.now()).format(
+        "DD/MM/YYYY"
+      )}.pdf`
+    );
   };
 
   const [filteredMissions, setFilteredMissions] = React.useState([]);
@@ -118,6 +210,8 @@ function ShowEngagementDetails({ engagementId, engagementData }) {
   //   )} FCFA)`,
   //   fileName: `details_versements_${membre__nom}_${membre__prenom}`,
   // };
+
+  if (loading) return <WaitingDatas />;
 
   return (
     <div className="overflow-x-hidden">
@@ -197,7 +291,8 @@ function ShowEngagementDetails({ engagementId, engagementData }) {
           <div className="mt-2">
             <Button
               // event={() => toPDF()}
-              event={() => handlePrint()}
+              // event={() => handlePrint()}
+              event={() => newPrint(formatedMissions)}
               full
             >
               Télécharger la fiche

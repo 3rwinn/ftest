@@ -17,6 +17,7 @@ const getEngagementStats = async (token) => {
 
   return response.data;
 };
+
 const getEngagementStatsByMission = async (token, mission) => {
   const config = {
     headers: {
@@ -96,7 +97,7 @@ const getMouvements = async (token, start_date, end_date) => {
   };
 
   let response;
-  if(start_date === null || end_date === null) {
+  if (start_date === null || end_date === null) {
     response = await axios.get(`${ENGAGEMENT_API_URL}/mouvements`, config);
     return response.data;
   } else {
@@ -107,6 +108,18 @@ const getMouvements = async (token, start_date, end_date) => {
   }
 
   // const response = await axios.get(`${ENGAGEMENT_API_URL}/mouvements`, config);
+
+  return response.data;
+};
+
+const getMouvementsNew = async (token) => {
+  const config = {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  };
+
+  const response = await axios.get(`${ENGAGEMENT_API_URL}/mouvements`, config);
 
   return response.data;
 };
@@ -165,7 +178,7 @@ const getDepenses = async (token, start_date, end_date) => {
   };
 
   let response;
-  if(start_date === null || end_date === null) {
+  if (start_date === null || end_date === null) {
     response = await axios.get(`${ENGAGEMENT_API_URL}/depenses`, config);
     return response.data;
   } else {
@@ -174,7 +187,6 @@ const getDepenses = async (token, start_date, end_date) => {
       config
     );
   }
-
 
   // const response = await axios.get(`${ENGAGEMENT_API_URL}/depenses`, config);
 
@@ -240,6 +252,7 @@ const engagementService = {
   editEngagement,
   deleteEngagement,
   getMouvements,
+  getMouvementsNew,
   createMouvement,
   editMouvement,
   deleteMouvement,

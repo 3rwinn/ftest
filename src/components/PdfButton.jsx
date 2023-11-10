@@ -20,7 +20,7 @@ function PDFButton({ mode = "engagement", realData, description = null }) {
       return data.original;
     });
 
-    console.log("ISMOOOOO", datasWanted)
+    console.log("ISMOOOOO", datasWanted);
 
     if (mode === "engagement") {
       const mycols = [
@@ -59,7 +59,15 @@ function PDFButton({ mode = "engagement", realData, description = null }) {
         head: [mycols],
         body: mydatas,
         headerStyles,
-        foot: [["", "Total" , formatNumberToMoney(total_palier), formatNumberToMoney(total), formatNumberToMoney(total_restant)]],
+        foot: [
+          [
+            "",
+            "Total",
+            formatNumberToMoney(total_palier),
+            formatNumberToMoney(total),
+            formatNumberToMoney(total_restant),
+          ],
+        ],
         footStyles: { fillColor: [1, 28, 55] },
         willDrawPage: (data) => {
           doc.addImage(
@@ -537,5 +545,6 @@ function PDFButton({ mode = "engagement", realData, description = null }) {
     </label>
   );
 }
+
 
 export default PDFButton;

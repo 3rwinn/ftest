@@ -126,6 +126,20 @@ export const getMouvements = createAsyncThunk(
   }
 );
 
+export const newGetMouvements = createAsyncThunk(
+  "engagement/mouvements/newGetAll",
+  async (_, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await engagementService.getMouvementsNew(
+        token
+         );
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
 export const createMouvement = createAsyncThunk(
   "engagement/mouvement/create",
   async (mouvementData, thunkAPI) => {
@@ -400,6 +414,16 @@ export const engagementSlice = createSlice({
         state.stats = action.payload;
       })
       .addCase(getEngagementStatsByMission.rejected, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(newGetMouvements.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(newGetMouvements.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.mouvements = action.payload.results;
+      })
+      .addCase(newGetMouvements.rejected, (state) => {
         state.isLoading = false;
       });
   },
