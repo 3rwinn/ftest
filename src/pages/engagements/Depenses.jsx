@@ -195,22 +195,22 @@ function Depenses() {
       handleDateRangeChange={handleDateRangeChange}
     >
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-2">
-        <div className="bg-white overflow-hidden shadow rounded-lg">
+        <div className="bg-red-500 overflow-hidden shadow rounded-lg">
           <div className="p-5">
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <BanknotesIcon
-                  className="h-6 w-6 text-ctamp"
+                  className="h-6 w-6 text-white"
                   aria-hidden="true"
                 />
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">
+                  <dt className="text-sm font-medium text-white truncate">
                     Total des dépenses
                   </dt>
                   <dd>
-                    <div className="text-lg font-medium text-gray-900">
+                    <div className="text-lg font-medium text-white">
                       {formatNumberToMoney(totalDepense)} FCFA
                     </div>
                   </dd>
@@ -220,22 +220,22 @@ function Depenses() {
           </div>
         </div>
 
-        <div className="bg-white overflow-hidden shadow rounded-lg">
+        <div className="bg-orange-500 overflow-hidden shadow rounded-lg">
           <div className="p-5">
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <ArrowUpLeftIcon
-                  className="h-6 w-6 text-yellow-400"
+                  className="h-6 w-6 text-white"
                   aria-hidden="true"
                 />
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">
+                  <dt className="text-sm font-medium text-white truncate">
                     Total des dépenses sur la periode
                   </dt>
                   <dd>
-                    <div className="text-lg font-medium text-gray-900">
+                    <div className="text-lg font-medium text-white">
                       {formatNumberToMoney(totalDepenseByDate)} FCFA
                     </div>
                   </dd>
