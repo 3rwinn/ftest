@@ -52,7 +52,7 @@ function Communication() {
       const allMembres = {
         id: uuidv4(),
         name: "Tous les membres",
-        value: JSON.stringify(membres.map((m) => m.contact)),
+        value: JSON.stringify(membres.map((m) => `225${m.contact}`)),
       };
 
       const allMembresByMission = [];
@@ -62,7 +62,7 @@ function Communication() {
           allMembresByMission.push({
             id: uuidv4(),
             name: "Membres " + mission.libelle,
-            value: JSON.stringify(membresFiltered.map((m) => m.contact)),
+            value: JSON.stringify(membresFiltered.map((m) => `225${m.contact}`)),
           });
         }
       });

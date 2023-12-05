@@ -21,7 +21,7 @@ function SendAlert({ contact }) {
   const handleSubmit = (values) => {
     const smsDatas = {
       message: values.message,
-      recipients: JSON.stringify([contact]),
+      recipients: JSON.stringify([`225${contact}`]),
     };
     console.log("smsDatas", smsDatas);
     dispatch(sendAlertSms(smsDatas))

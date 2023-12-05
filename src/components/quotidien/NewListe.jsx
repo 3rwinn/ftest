@@ -58,7 +58,7 @@ function NewListe() {
   const handleSubmit = (values, { resetForm }) => {
     const listDatas = {
       libelle: values.libelle,
-      membres: JSON.stringify(values.membres.map((membre) => membre.numero)),
+      membres: JSON.stringify(values.membres.map((membre) => `225${membre.numero}`)),
     };
 
     console.log("LISTE", listDatas);
