@@ -15,6 +15,7 @@ import {
 import { useAppContext } from "../../context/AppState";
 import NewPalier from "../../components/settings/NewPalier";
 import EditPalier from "../../components/settings/EditPalier";
+import { formatNumberToMoney } from "../../utils/helpers";
 
 function Paliers() {
   const dispatch = useDispatch();
@@ -78,6 +79,9 @@ function Paliers() {
       {
         Header: "Montant",
         accessor: "montant",
+        Cell: ({ value, row }) => (
+          <div>{`${formatNumberToMoney(value)} FCFA`}</div>
+        ),
       },
       {
         Header: "Actions",
