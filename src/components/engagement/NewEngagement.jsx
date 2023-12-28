@@ -120,7 +120,9 @@ function NewEngagement() {
           mission: user?.mission?.id === 0 ? null : user?.mission?.id,
           palier: null,
           membre: null,
-          date: new Date(),
+          // date: new Date(),
+          // set date object to 1 jan 2024
+          date: new Date(2024, 0, 1),
         }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}

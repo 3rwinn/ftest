@@ -29,7 +29,7 @@ const validationSchema = Yup.object().shape({
   baptise: Yup.mixed().required("Ce champ est requis."),
   contact: Yup.string().required("Ce champ est requis."),
   mission: Yup.mixed().required("Ce champ est requis."),
-  habitation: Yup.string().required("Ce champ est requis."),
+  // habitation: Yup.string().required("Ce champ est requis."),
 });
 
 const validationSchemaUpload = Yup.object().shape({
