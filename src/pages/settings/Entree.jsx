@@ -110,6 +110,11 @@ function Entrees() {
     ],
     []
   );
+
+  // const entreeDatas = entrees?.length > 0 ? entrees : [];
+
+  console.log("entrees", entrees)
+
   return (
     <Layout>
       <PageContent

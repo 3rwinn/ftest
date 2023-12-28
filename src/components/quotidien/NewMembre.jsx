@@ -102,7 +102,7 @@ function NewMembre() {
       marie: values.marie,
       baptise: values.baptise,
       contact: values.contact,
-      habitation: values.habitation,
+      habitation: values?.habitation ? values.habitation : "",
       mission: values.mission,
       nouveau: false,
     };
