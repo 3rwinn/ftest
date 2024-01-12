@@ -52,13 +52,23 @@ function FiEntrees() {
   const { user } = useSelector((state) => state.auth);
 
   const [dateRange, setDateRange] = React.useState({
-    from: new Date(new Date().getFullYear(), 1, 1),
+    from: `${new Date().getFullYear()}-01-01`,
     to: new Date(),
+    // from: null,
+    // to: null,
   });
+
+  console.log("dateRange", dateRange);
 
   const handleDateRangeChange = (dateRange) => {
     // handle the selected date range here
-    setDateRange(dateRange);
+    // setDateRange(dateRange);
+    dispatch(
+      getCaisseEntrees({
+        start_date: formatLocaleEn(dateRange.from),
+        end_date: formatLocaleEn(dateRange.to),
+      })
+    );
   };
 
   React.useEffect(() => {
@@ -70,7 +80,7 @@ function FiEntrees() {
     );
     dispatch(getTypesEntrees());
     dispatch(getMissions());
-  }, [dateRange]);
+  }, []);
 
   const {
     switchSlideOver,
@@ -120,26 +130,32 @@ function FiEntrees() {
     });
   };
 
+  function formatDatas(datas) {
+    const formattedData = datas.map((entree) => {
+      return {
+        f_date: dayjs(entree.date).format("DD/MM/YYYY"),
+        f_type: typeEntrees.find((type) => type.id === entree.type_entree)
+          ?.libelle,
+        f_mission: missions.find((mission) => mission.id === entree.mission)
+          ?.libelle,
+        f_montant: formatNumberToMoney(entree.montant),
+        ...entree,
+      };
+    });
+    let datasToShow =
+      user?.mission?.id !== 0
+        ? formattedData.filter((entree) => entree.mission === user?.mission?.id)
+        : formattedData;
+
+    return datasToShow;
+  }
+
+  console.log("entr", entreesCaisse);
+
   const [formatedEntrees, setFormatedEntrees] = React.useState([]);
   React.useEffect(() => {
     if (entreesCaisse?.length > 0) {
-      const formattedData = entreesCaisse.map((entree) => {
-        return {
-          f_date: dayjs(entree.date).format("DD/MM/YYYY"),
-          f_type: typeEntrees.find((type) => type.id === entree.type_entree)
-            ?.libelle,
-          f_mission: missions.find((mission) => mission.id === entree.mission)
-            ?.libelle,
-          f_montant: formatNumberToMoney(entree.montant),
-          ...entree,
-        };
-      });
-      let datasToShow =
-        user?.mission?.id !== 0
-          ? formattedData.filter(
-              (entree) => entree.mission === user?.mission?.id
-            )
-          : formattedData;
+      const datasToShow = formatDatas(entreesCaisse);
       setFormatedEntrees(datasToShow);
     } else {
       setFormatedEntrees([]);
@@ -229,7 +245,7 @@ function FiEntrees() {
                   // className="h-6 w-6 text-ctamp"
                   className="h-6 w-6 text-white"
                   aria-hidden="true"
-                /> 
+                />
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>

@@ -52,7 +52,7 @@ function FiSorties() {
   const { user } = useSelector((state) => state.auth);
 
   const [dateRange, setDateRange] = React.useState({
-    from: new Date(new Date().getFullYear(), 1, 1),
+    from: `${new Date().getFullYear()}-01-01`,
     to: new Date(),
   });
 
@@ -233,7 +233,7 @@ function FiSorties() {
               <div className="ml-5 w-0 flex-1">
                 <dl>
                   <dt className="text-sm font-medium text-white truncate">
-                    Total des entrées
+                    Total des sorties
                   </dt>
                   <dd>
                     <div className="text-lg font-medium text-white">
@@ -257,7 +257,7 @@ function FiSorties() {
               <div className="ml-5 w-0 flex-1">
                 <dl>
                   <dt className="text-sm font-medium text-white truncate">
-                    Total des entrées sur la periode
+                    Total des sorties sur la periode
                   </dt>
                   <dd>
                     <div className="text-lg font-medium text-white">

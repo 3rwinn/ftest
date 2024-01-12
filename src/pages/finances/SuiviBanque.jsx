@@ -109,7 +109,7 @@ function SuiviBanque() {
   };
 
   const [dateRange, setDateRange] = React.useState({
-    from: new Date(new Date().getFullYear(), 1, 1),
+    from: `${new Date().getFullYear()}-01-01`,
     to: new Date(),
   });
 

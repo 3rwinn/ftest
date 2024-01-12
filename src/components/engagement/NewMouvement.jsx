@@ -51,6 +51,7 @@ function NewMouvement() {
         const mission = missions.find((m) => m.id === engagement?.mission);
         const palier = paliers.find((p) => p.id === engagement?.palier);
         return {
+          palier_montant: palier.montant,
           libelle:
             mission?.libelle +
             " - " +
@@ -62,17 +63,39 @@ function NewMouvement() {
           ...engagement,
         };
       });
-      let engagementToShow = user?.mission?.id !== 0 ? formatedEngagements.filter((e) => e.mission === user?.mission?.id) : formatedEngagements;
+      let engagementToShow =
+        user?.mission?.id !== 0
+          ? formatedEngagements.filter((e) => e.mission === user?.mission?.id)
+          : formatedEngagements;
       setFormatedEngagements(engagementToShow);
     }
   }, [engagements]);
 
+  const [currentEngagement, setCurrentEngagement] = React.useState(null);
+
+  console.log("currentEngagement", currentEngagement);
+
   const handleSubmit = (values) => {
+    let currentEngagementData = formatedEngagements.find(
+      (e) => e.id === values.engagement
+    );
+
+    if (values.montant > currentEngagementData.palier_montant) {
+      setNotificationContent({
+        type: "error",
+        title: "Erreur",
+        description: "Le montant ne doit pas dépasser le montant du palier.",
+      });
+      switchNotification(true);
+      return;
+    }
+
     const mouvementData = {
       engagement: values.engagement,
       montant: values.montant,
       date: formatLocaleEn(values.date),
     };
+
     // console.log("MBDT", mouvementData);
     dispatch(createMouvement(mouvementData))
       .unwrap()
@@ -107,10 +130,12 @@ function NewMouvement() {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        
-        <FormComboSelect  label={"Engagement"}
+        <FormComboSelect
+          label={"Engagement"}
           name={"engagement"}
-          datas={formatDataToSelect(formatedEngagements)} />
+          datas={formatDataToSelect(formatedEngagements)}
+          sideEvent={setCurrentEngagement}
+        />
 
         <div className="mb-4" />
 
