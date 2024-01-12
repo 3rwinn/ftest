@@ -9,7 +9,10 @@ import {
   SubmitButton,
 } from "../forms";
 import * as Yup from "yup";
-import { createMouvement } from "../../features/engagement/engagementSlice";
+import {
+  createMouvement,
+  getEngagementStats,
+} from "../../features/engagement/engagementSlice";
 import { getMissions, getPaliers } from "../../features/settings/settingsSlice";
 import { getMembres } from "../../features/quotidien/quotidienSlice";
 import { useAppContext } from "../../context/AppState";
@@ -28,7 +31,9 @@ const validationSchema = Yup.object().shape({
 
 function NewMouvement() {
   const dispatch = useDispatch();
-  const { isLoading, engagements } = useSelector((state) => state.engagement);
+  const { isLoading, engagements, stats } = useSelector(
+    (state) => state.engagement
+  );
   const { membres } = useSelector((state) => state.quotidien);
   const { missions, paliers } = useSelector((state) => state.settings);
   const { switchSlideOver, setNotificationContent, switchNotification } =
@@ -37,6 +42,7 @@ function NewMouvement() {
   const { user } = useSelector((state) => state.auth);
 
   React.useEffect(() => {
+    dispatch(getEngagementStats());
     dispatch(getEngagements());
     dispatch(getMissions());
     dispatch(getPaliers());
@@ -44,32 +50,64 @@ function NewMouvement() {
   }, []);
 
   const [formatedEngagements, setFormatedEngagements] = React.useState([]);
+  console.log("formatedEngagements", formatedEngagements);
   React.useEffect(() => {
-    if (engagements.length > 0) {
-      const formatedEngagements = engagements.map((engagement) => {
-        const membre = membres.find((m) => m.id === engagement?.membre);
-        const mission = missions.find((m) => m.id === engagement?.mission);
-        const palier = paliers.find((p) => p.id === engagement?.palier);
-        return {
-          palier_montant: palier.montant,
-          libelle:
-            mission?.libelle +
-            " - " +
-            membre?.nom +
-            " " +
-            membre?.prenom +
-            " - " +
-            formatNumberToMoney(palier?.montant),
-          ...engagement,
-        };
-      });
+    if (stats?.engagement_by_membre?.length > 0 > 0) {
+      const formatedEngagements = stats?.engagement_by_membre.map(
+        (engagement) => {
+          // const membre = membres.find((m) => m.id === engagement?.membre);
+          // const mission = missions.find((m) => m.id === engagement?.mission);
+          // const palier = paliers.find((p) => p.id === engagement?.palier);
+          return {
+            reste: engagement?.restant_percent,
+            palier_montant: engagement?.palier__montant,
+            libelle:
+              engagement?.mission__libelle +
+              " - " +
+              engagement?.membre__nom +
+              " " +
+              engagement?.membre__prenom +
+              " - " +
+              formatNumberToMoney(engagement?.palier__montant),
+            ...engagement,
+          };
+        }
+      );
       let engagementToShow =
         user?.mission?.id !== 0
-          ? formatedEngagements.filter((e) => e.mission === user?.mission?.id)
-          : formatedEngagements;
+          ? formatedEngagements.filter(
+              (e) => e.mission === user?.mission?.id && e.reste > 0
+            )
+          : formatedEngagements.filter((e) => e.reste > 0);
       setFormatedEngagements(engagementToShow);
     }
-  }, [engagements]);
+  }, [stats]);
+  // React.useEffect(() => {
+  //   if (engagements.length > 0) {
+  //     const formatedEngagements = engagements.map((engagement) => {
+  //       const membre = membres.find((m) => m.id === engagement?.membre);
+  //       const mission = missions.find((m) => m.id === engagement?.mission);
+  //       const palier = paliers.find((p) => p.id === engagement?.palier);
+  //       return {
+  //         palier_montant: palier.montant,
+  //         libelle:
+  //           mission?.libelle +
+  //           " - " +
+  //           membre?.nom +
+  //           " " +
+  //           membre?.prenom +
+  //           " - " +
+  //           formatNumberToMoney(palier?.montant),
+  //         ...engagement,
+  //       };
+  //     });
+  //     let engagementToShow =
+  //       user?.mission?.id !== 0
+  //         ? formatedEngagements.filter((e) => e.mission === user?.mission?.id)
+  //         : formatedEngagements;
+  //     setFormatedEngagements(engagementToShow);
+  //   }
+  // }, [engagements]);
 
   const [currentEngagement, setCurrentEngagement] = React.useState(null);
 

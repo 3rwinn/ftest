@@ -6,11 +6,14 @@ import {
   FormSelect,
   FormDatePicker,
   SubmitButton,
+  FormSelectWithAction,
 } from "../forms";
 import * as Yup from "yup";
 import { useAppContext } from "../../context/AppState";
 import { addSuiviBanque } from "../../features/finance/financeSlice";
-import { formatLocaleEn } from "../../utils/helpers";
+import { formatDataToSelect, formatLocaleEn } from "../../utils/helpers";
+import { getMissions } from "../../features/settings/settingsSlice";
+import NewMission from "../settings/NewMission";
 
 const validationSchema = Yup.object().shape({
   date: Yup.date().required("Ce champ est requis."),
@@ -23,13 +26,27 @@ function NewSuiviBanque() {
   const dispatch = useDispatch();
   const { isLoading } = useSelector((state) => state.finances);
   //   const { user } = useSelector((state) => state.auth.user);
+  const { missions } = useSelector((state) => state.settings);
+
+  React.useEffect(() => {
+    dispatch(getMissions());
+  }, []);
 
   const {
     switchSlideOver,
     setNotificationContent,
     switchNotification,
-    // switchModal,
+    switchModal,
   } = useAppContext();
+
+  const handleQuickAddMission = () => {
+    switchModal(true, {
+      type: "success",
+      title: "Nouvelle mission",
+      description: <NewMission />,
+      noConfirm: true,
+    });
+  };
 
   const handleSubmit = (values) => {
     const transactionDatas = {
@@ -37,6 +54,7 @@ function NewSuiviBanque() {
       montant: values.montant,
       action: values.action,
       commentaire: values.commentaire,
+      mission: values.mission
       // auteur: user.id,
     };
 
@@ -68,6 +86,7 @@ function NewSuiviBanque() {
         initialValues={{
           date: new Date(),
           montant: "",
+          mission: null,
           action: null,
           commentaire: "",
         }}
@@ -75,6 +94,12 @@ function NewSuiviBanque() {
         validationSchema={validationSchema}
       >
         <FormDatePicker label={"Date"} name={"date"} />
+        <FormSelectWithAction
+          name={"mission"}
+          label={"Mission"}
+          datas={formatDataToSelect(missions)}
+          actionEvent={handleQuickAddMission}
+        />
         <FormField label={"Montant"} type={"number"} name={"montant"} />
         <FormSelect
           name={"action"}

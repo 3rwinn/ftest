@@ -35,7 +35,7 @@ function NewEngagement() {
   const { membres } = useSelector((state) => state.quotidien);
   const { missions, paliers } = useSelector((state) => state.settings);
   const { user } = useSelector((state) => state.auth);
-  console.log("userFromNewEngagement", user);
+  // console.log("userFromNewEngagement", user);
   const {
     switchSlideOver,
     setNotificationContent,

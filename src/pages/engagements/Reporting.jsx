@@ -50,6 +50,8 @@ function EngagementReporting() {
     dispatch(getEngagementStats());
   }, []);
 
+  console.log("stats", stats);
+
   const [formatedEngagements, setFormatedEngagements] = React.useState([]);
   React.useEffect(() => {
     if (stats?.engagement_by_membre?.length > 0) {
@@ -60,7 +62,7 @@ function EngagementReporting() {
           f_mission: engagement?.mission__libelle,
           f_date: engagement.annee__year,
           f_versement: formatNumberToMoney(engagement?.mouvement_sum),
-          f_reste: formatNumberToMoney(engagement?.palier__montant - engagement?.mouvement_sum),
+          f_reste: formatNumberToMoney(engagement?.palier__montant - engagement?.mouvement_sum), 
           ...engagement,
         };
       });

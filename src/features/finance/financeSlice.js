@@ -3,6 +3,7 @@ import financeService from "./financeService";
 import { replaceInArray } from "../../utils/helpers";
 
 const initialState = {
+  totalSuiviBanque: 0,
   suiviBanque: [],
   ficheDimanches: [],
   isLoading: false,
@@ -275,6 +276,8 @@ export const financeSlice = createSlice({
       .addCase(getSuiviBanque.fulfilled, (state, action) => {
         state.isLoading = false;
         state.suiviBanque = action.payload.suivi_banque_by_date;
+        state.totalSuiviBanque = action.payload.total_all_suivi_banque;
+        state.missionSuivi = action.payload.missions_datas;
       })
       .addCase(getSuiviBanque.rejected, (state) => {
         state.isLoading = false;

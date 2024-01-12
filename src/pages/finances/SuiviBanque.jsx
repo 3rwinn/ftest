@@ -27,6 +27,7 @@ import {
 } from "@heroicons/react/24/outline";
 import CustomDateRangePicker from "../../components/common/CustomDateRangePicker";
 import WaitingDatas from "../../components/WaitingDatas";
+import { getMissions } from "../../features/settings/settingsSlice";
 
 const typeSuivi = [
   { id: 1, value: "versement", name: "Versement" },
@@ -51,7 +52,9 @@ function Container({ title, actionButton, handleDateRangeChange, children }) {
 function SuiviBanque() {
   const dispatch = useDispatch();
 
-  const { isLoading, suiviBanque } = useSelector((state) => state.finances);
+  const { missions } = useSelector((state) => state.settings);
+  const { isLoading, suiviBanque, totalSuiviBanque, missionSuivi } =
+    useSelector((state) => state.finances);
 
   const {
     switchSlideOver,
@@ -119,12 +122,14 @@ function SuiviBanque() {
   };
 
   React.useEffect(() => {
+    dispatch(getMissions());
     dispatch(
       getSuiviBanque({
         start_date: formatLocaleEn(dateRange.from),
         end_date: formatLocaleEn(dateRange.to),
       })
     );
+    
     // dispatch(getEngagementStats());
   }, [dateRange]);
 
@@ -136,6 +141,7 @@ function SuiviBanque() {
           f_montant: formatNumberToMoney(suivi.montant),
           f_date: dayjs(suivi.date).format("DD/MM/YYYY"),
           f_action: typeSuivi.find((type) => type.value === suivi.action)?.name,
+          f_mission: missions.find((mission) => mission.id === suivi.mission)?.libelle,
           ...suivi,
         };
       });
@@ -147,6 +153,11 @@ function SuiviBanque() {
 
   const columns = React.useMemo(
     () => [
+      {
+        Header: "Mission",
+        accessor: "f_mission",
+        Filter: SelectColumnFilter
+      },
       {
         Header: "Action",
         accessor: "f_action",
@@ -204,6 +215,8 @@ function SuiviBanque() {
       </Container>
     );
 
+  console.log("missionSuivi", missionSuivi);
+
   return (
     <Container
       title={"Suivi banque"}
@@ -213,49 +226,54 @@ function SuiviBanque() {
       }}
       handleDateRangeChange={handleDateRangeChange}
     >
-      {/* <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-2">
-          <div className="bg-white overflow-hidden shadow rounded-lg">
-            <div className="p-5">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <BuildingLibraryIcon
-                    className="h-6 w-6 text-ctamp"
-                    aria-hidden="true"
-                  />
-                </div>
-                <div className="ml-5 w-0 flex-1">
-                  <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">
-                      Solde banque
-                    </dt>
-                    <dd>
-                      <div className="text-lg font-medium text-gray-900">
-                        0 FCFA
-                      </div>
-                    </dd>
-                  </dl>
-                </div>
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-2">
+        <div className="bg-green-500 overflow-hidden shadow rounded-lg">
+          <div className="p-5">
+            <div className="flex items-center">
+              <div className="flex-shrink-0">
+                <BuildingLibraryIcon
+                  className="h-6 w-6 text-white"
+                  aria-hidden="true"
+                />
+              </div>
+              <div className="ml-5 w-0 flex-1">
+                <dl>
+                  <dt className="text-sm font-medium text-white truncate">
+                    Solde banque
+                  </dt>
+                  <dd>
+                    <div className="text-lg font-medium text-white">
+                      {formatNumberToMoney(totalSuiviBanque)} FCFA
+                    </div>
+                  </dd>
+                </dl>
               </div>
             </div>
           </div>
-
-          <div className="bg-white overflow-hidden shadow rounded-lg">
+        </div>
+        {missionSuivi?.map((mission, index) => (
+          <div key={index} className="bg-yellow-500 overflow-hidden shadow rounded-lg">
             <div className="p-5">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <ArchiveBoxIcon
-                    className="h-6 w-6 text-yellow-400"
+                    className="h-6 w-6 text-white"
                     aria-hidden="true"
                   />
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">
-                      Solde caisse
+                    <dt className="text-sm font-bold text-white truncate">
+                      {mission.mission}
                     </dt>
                     <dd>
-                      <div className="text-lg font-medium text-gray-900">
-                        0 FCFA
+                      <div className="text-sm text-medium text-white">
+                      Versement:  {formatNumberToMoney(mission.versement_total)} FCFA
+                      </div>
+                    </dd>
+                    <dd>
+                      <div className="text-sm font-medium text-white">
+                      Retrait:  {formatNumberToMoney(mission.retrait_total)} FCFA
                       </div>
                     </dd>
                   </dl>
@@ -263,7 +281,8 @@ function SuiviBanque() {
               </div>
             </div>
           </div>
-        </div> */}
+        ))}
+      </div>
       <div className="mt-6">
         {/* <h1 className="text-2xl font-semibold text-gray-900 mb-2">
             Liste des transactions

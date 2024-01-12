@@ -6,14 +6,17 @@ import {
   FormSelect,
   FormDatePicker,
   SubmitButton,
+  FormSelectWithAction,
 } from "../forms";
 import * as Yup from "yup";
 import { useAppContext } from "../../context/AppState";
 import {
   editSuiviBanque,
 } from "../../features/finance/financeSlice";
-import { formatLocaleEn } from "../../utils/helpers";
+import { formatDataToSelect, formatLocaleEn } from "../../utils/helpers";
 import dayjs from "dayjs";
+import { getMissions } from "../../features/settings/settingsSlice";
+import NewMission from "../settings/NewMission";
 
 const validationSchema = Yup.object().shape({
   date: Yup.date().required("Ce champ est requis."),
@@ -31,13 +34,27 @@ function EditSuiviBanque({ transactionId, currentTransaction }) {
   const dispatch = useDispatch();
   const { isLoading } = useSelector((state) => state.finances);
   //   const { user } = useSelector((state) => state.auth.user);
+  const { missions } = useSelector((state) => state.settings);
+
+  React.useEffect(() => {
+    dispatch(getMissions());
+  }, []);
 
   const {
     switchSlideOver,
     setNotificationContent,
     switchNotification,
-    // switchModal,
+    switchModal,
   } = useAppContext();
+
+  const handleQuickAddMission = () => {
+    switchModal(true, {
+      type: "success",
+      title: "Nouvelle mission",
+      description: <NewMission />,
+      noConfirm: true,
+    });
+  };
 
   const handleSubmit = (values) => {
     const transactionDatas = {
@@ -45,6 +62,7 @@ function EditSuiviBanque({ transactionId, currentTransaction }) {
       datas: {
         date: formatLocaleEn(values.date),
         montant: values.montant,
+        mission: values.mission,
         action: values.action,
         commentaire: values.commentaire,
         // auteur: user.id,
@@ -79,6 +97,7 @@ function EditSuiviBanque({ transactionId, currentTransaction }) {
         initialValues={{
           date: dayjs(currentTransaction.date).toDate(),
           montant: currentTransaction.montant,
+          mission: currentTransaction.mission,
           action: currentTransaction.action,
           commentaire: currentTransaction.commentaire,
         }}
@@ -86,6 +105,12 @@ function EditSuiviBanque({ transactionId, currentTransaction }) {
         validationSchema={validationSchema}
       >
         <FormDatePicker label={"Date"} name={"date"} />
+        <FormSelectWithAction
+          name={"mission"}
+          label={"Mission"}
+          datas={formatDataToSelect(missions)}
+          actionEvent={handleQuickAddMission}
+        />
         <FormField label={"Montant"} type={"number"} name={"montant"} />
         <FormSelect
           name={"action"}
