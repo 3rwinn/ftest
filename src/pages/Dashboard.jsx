@@ -66,10 +66,11 @@ function Dashboard() {
 
   React.useEffect(() => {
     if (missions.length > 0) {
-      setSelectedMission(missions?.[0]?.id);
+      // setSelectedMission(missions?.[0]?.id);
       dispatch(
         getFinanceStats({
-          mission: missions?.[0]?.id,
+          mission: defaultMission,
+          // mission: missions?.[0]?.id,
           date_debut: formatLocaleEn(selectedDateDebut),
           date_fin: formatLocaleEn(selectedDateFin),
         })

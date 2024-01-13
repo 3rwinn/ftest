@@ -2,6 +2,7 @@ import axios from "axios";
 import backend from "../../constants/config";
 
 const QUOTIDIEN_API_URL = backend.API + "/quotidien";
+const BASE_URL = backend.API;
 
 // SMS
 
@@ -56,7 +57,7 @@ const createEvenement = async (evenementData, token) => {
   };
 
   const response = await axios.post(
-    QUOTIDIEN_API_URL + "/evenements",
+    BASE_URL + "/evenements",
     evenementData,
     config
   );
@@ -71,7 +72,7 @@ const getEvenements = async (token) => {
     },
   };
 
-  const response = await axios.get(QUOTIDIEN_API_URL + "/evenements", config);
+  const response = await axios.get(BASE_URL + "/evenements", config);
 
   return response.data;
 };
@@ -84,7 +85,7 @@ const editEvenement = async (evenementId, evenementData, token) => {
   };
 
   const response = await axios.patch(
-    QUOTIDIEN_API_URL + "/evenement/" + evenementId,
+    BASE_URL + "/evenement/" + evenementId,
     evenementData,
     config
   );
@@ -99,7 +100,7 @@ const deleteEvenement = async (evenementId, token) => {
     },
   };
 
-  await axios.delete(QUOTIDIEN_API_URL + "/evenement/" + evenementId, config);
+  await axios.delete(BASE_URL + "/evenement/" + evenementId, config);
 
   return evenementId;
 };

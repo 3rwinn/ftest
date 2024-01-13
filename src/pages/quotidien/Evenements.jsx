@@ -232,7 +232,7 @@ function Evenements() {
                                 </span>
                               )}
                             </Menu.Item>
-                            <Menu.Item>
+                            {/* <Menu.Item>
                               {({ active }) => (
                                 <a
                                   href="#"
@@ -246,7 +246,7 @@ function Evenements() {
                                   Cancel
                                 </a>
                               )}
-                            </Menu.Item>
+                            </Menu.Item> */}
                           </div>
                         </Menu.Items>
                       </Transition>
