@@ -91,6 +91,12 @@ function NewUsers() {
         <FormField name={"nom"} type={"text"} label={"Nom"} />
         <FormField name={"prenom"} type={"text"} label={"Prénom"} />
         <FormField name={"email"} type={"email"} label={"Email"} />
+        <div className="my-4">
+          <span>
+            Le mot de passe par defaut de l'utilisateur est:{" "}
+            <b className="font-bold">ctam2023</b>
+          </span>
+        </div>
         <FormSelect
           label={"Role"}
           name={"role"}
@@ -112,7 +118,7 @@ function Utilisateurs() {
     setSlideOverContent,
     setNotificationContent,
     switchNotification,
-    switchModal
+    switchModal,
   } = useAppContext();
 
   const showNewUser = () => {
@@ -128,6 +134,7 @@ function Utilisateurs() {
   const dispatch = useDispatch();
 
   const { users } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
 
   console.log("usrs", users);
 
@@ -208,14 +215,18 @@ function Utilisateurs() {
           let userId = value;
           return (
             // <div className="flex space-x-2">
-            <div>
-              <div
-                onClick={() => handleDeleteUser(userId)}
-                className="cursor-pointer"
-              >
-                <TrashIcon className="text-mde-red h-5 w-5" />
-              </div>
-            </div>
+            <>
+              {user?.mission?.id === 0 ? (
+                <div>
+                  <div
+                    onClick={() => handleDeleteUser(userId)}
+                    className="cursor-pointer"
+                  >
+                    <TrashIcon className="text-mde-red h-5 w-5" />
+                  </div>
+                </div>
+              ) : null}
+            </>
           );
         },
       },
@@ -227,10 +238,11 @@ function Utilisateurs() {
     <Layout>
       <PageContent
         title={"Utilisateurs"}
-        actionButton={{
-          title: "Ajouter un utilisateur",
-          event: () => showNewUser(),
-        }}
+        actionButton={
+          user?.mission?.id === 0
+            ? { title: "Ajouter", event: showNewUser }
+            : null
+        }
       >
         <Table columns={columns} data={formatedUsers} withExport={false} />
       </PageContent>

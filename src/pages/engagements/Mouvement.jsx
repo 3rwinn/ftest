@@ -13,7 +13,11 @@ import { useAppContext } from "../../context/AppState";
 import { getMissions, getPaliers } from "../../features/settings/settingsSlice";
 import { formatLocaleEn, formatNumberToMoney } from "../../utils/helpers";
 import dayjs from "dayjs";
-import { BanknotesIcon, PencilIcon, TrashIcon } from "@heroicons/react/24/solid";
+import {
+  BanknotesIcon,
+  PencilIcon,
+  TrashIcon,
+} from "@heroicons/react/24/solid";
 import NewMouvement from "../../components/engagement/NewMouvement";
 import EditMouvement from "../../components/engagement/EditMouvement";
 import CustomDateRangePicker from "../../components/common/CustomDateRangePicker";
@@ -36,15 +40,14 @@ function Container({ title, actionButton, handleDateRangeChange, children }) {
 
 function Mouvement() {
   const dispatch = useDispatch();
-  const { isLoading, mouvements, totalEntree, totalEntreeByDate, engagements } = useSelector(
-    (state) => state.engagement
-  );
+  const { isLoading, mouvements, totalEntree, totalEntreeByDate, engagements } =
+    useSelector((state) => state.engagement);
   const { membres } = useSelector((state) => state.quotidien);
   const { paliers, missions } = useSelector((state) => state.settings);
   const { user } = useSelector((state) => state.auth);
 
   const [dateRange, setDateRange] = React.useState({
-    from:  `${new Date().getFullYear()}-01-01`,
+    from: `${new Date().getFullYear()}-01-01`,
     to: new Date(),
   });
 
@@ -232,56 +235,58 @@ function Mouvement() {
       }}
       handleDateRangeChange={handleDateRangeChange}
     >
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-2">
-        <div className="bg-green-500 overflow-hidden shadow rounded-lg">
-          <div className="p-5">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <BanknotesIcon
-                  className="h-6 w-6 text-white"
-                  aria-hidden="true"
-                />
+      {user?.mission?.id === 0 && (
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-2">
+          <div className="bg-green-500 overflow-hidden shadow rounded-lg">
+            <div className="p-5">
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  <BanknotesIcon
+                    className="h-6 w-6 text-white"
+                    aria-hidden="true"
+                  />
+                </div>
+                <div className="ml-5 w-0 flex-1">
+                  <dl>
+                    <dt className="text-sm font-medium text-white truncate">
+                      Total des entrées
+                    </dt>
+                    <dd>
+                      <div className="text-lg font-medium text-white">
+                        {formatNumberToMoney(totalEntree)} FCFA
+                      </div>
+                    </dd>
+                  </dl>
+                </div>
               </div>
-              <div className="ml-5 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-white truncate">
-                    Total des entrées
-                  </dt>
-                  <dd>
-                    <div className="text-lg font-medium text-white">
-                      {formatNumberToMoney(totalEntree)} FCFA
-                    </div>
-                  </dd>
-                </dl>
+            </div>
+          </div>
+          <div className="bg-orange-500 overflow-hidden shadow rounded-lg">
+            <div className="p-5">
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  <BanknotesIcon
+                    className="h-6 w-6 text-white"
+                    aria-hidden="true"
+                  />
+                </div>
+                <div className="ml-5 w-0 flex-1">
+                  <dl>
+                    <dt className="text-sm font-medium text-white truncate">
+                      Total des entrées sur la periode
+                    </dt>
+                    <dd>
+                      <div className="text-lg font-medium text-white">
+                        {formatNumberToMoney(totalEntreeByDate)} FCFA
+                      </div>
+                    </dd>
+                  </dl>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <div className="bg-orange-500 overflow-hidden shadow rounded-lg">
-          <div className="p-5">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <BanknotesIcon
-                  className="h-6 w-6 text-white"
-                  aria-hidden="true"
-                />
-              </div>
-              <div className="ml-5 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-white truncate">
-                    Total des entrées sur la periode
-                  </dt>
-                  <dd>
-                    <div className="text-lg font-medium text-white">
-                      {formatNumberToMoney(totalEntreeByDate)} FCFA
-                    </div>
-                  </dd>
-                </dl>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      )}
       <div className="mt-4">
         <Table
           columns={columns}

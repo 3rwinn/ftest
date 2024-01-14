@@ -78,6 +78,9 @@ function FormMultiComboSelect({ tabName, label, datas }) {
           return person.name.toLowerCase().includes(query.toLowerCase());
         });
 
+  console.log("query", query);
+  console.log("formatedDatas", filteredDatas);
+
   return (
     <>
       <label className="block text-sm font-medium text-mde-gray mb-2">
@@ -120,6 +123,7 @@ function FormMultiComboSelect({ tabName, label, datas }) {
                 <Combobox.Input
                   className="w-full rounded-l-md border border-gray-300 bg-white px-4 py-2 pl-3 pr-10 shadow-sm focus:border-mde-red focus:outline-none focus:ring-1 focus:ring-mde-red sm:text-sm"
                   onChange={(event) => {
+                    console.log("event", event.target.value);
                     setQuery(event.target.value);
                   }}
                   placeholder="Rechercher ou cliquer sur les flèches pour choisir"

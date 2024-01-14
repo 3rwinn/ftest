@@ -25,7 +25,7 @@ const validationSchema = Yup.object().shape({
 function NewSuiviBanque() {
   const dispatch = useDispatch();
   const { isLoading } = useSelector((state) => state.finances);
-  //   const { user } = useSelector((state) => state.auth.user);
+  const { user } = useSelector((state) => state.auth.user);
   const { missions } = useSelector((state) => state.settings);
 
   React.useEffect(() => {
@@ -54,7 +54,7 @@ function NewSuiviBanque() {
       montant: values.montant,
       action: values.action,
       commentaire: values.commentaire,
-      mission: values.mission
+      mission: values.mission,
       // auteur: user.id,
     };
 
@@ -86,7 +86,7 @@ function NewSuiviBanque() {
         initialValues={{
           date: new Date(),
           montant: "",
-          mission: null,
+          mission: user?.mission?.id || null,
           action: null,
           commentaire: "",
         }}
@@ -94,12 +94,14 @@ function NewSuiviBanque() {
         validationSchema={validationSchema}
       >
         <FormDatePicker label={"Date"} name={"date"} />
-        <FormSelectWithAction
-          name={"mission"}
-          label={"Mission"}
-          datas={formatDataToSelect(missions)}
-          actionEvent={handleQuickAddMission}
-        />
+        {user?.mission?.id === 0 && (
+          <FormSelectWithAction
+            name={"mission"}
+            label={"Mission"}
+            datas={formatDataToSelect(missions)}
+            actionEvent={handleQuickAddMission}
+          />
+        )}
         <FormField label={"Montant"} type={"number"} name={"montant"} />
         <FormSelect
           name={"action"}

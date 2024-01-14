@@ -51,7 +51,7 @@ function Container({ title, actionButton, handleDateRangeChange, children }) {
 
 function SuiviBanque() {
   const dispatch = useDispatch();
-
+  const { user } = useSelector((state) => state.auth);
   const { missions } = useSelector((state) => state.settings);
   const { isLoading, suiviBanque, totalSuiviBanque, missionSuivi } =
     useSelector((state) => state.finances);
@@ -129,7 +129,7 @@ function SuiviBanque() {
         end_date: formatLocaleEn(dateRange.to),
       })
     );
-    
+
     // dispatch(getEngagementStats());
   }, [dateRange]);
 
@@ -141,7 +141,8 @@ function SuiviBanque() {
           f_montant: formatNumberToMoney(suivi.montant),
           f_date: dayjs(suivi.date).format("DD/MM/YYYY"),
           f_action: typeSuivi.find((type) => type.value === suivi.action)?.name,
-          f_mission: missions.find((mission) => mission.id === suivi.mission)?.libelle,
+          f_mission: missions.find((mission) => mission.id === suivi.mission)
+            ?.libelle,
           ...suivi,
         };
       });
@@ -156,7 +157,7 @@ function SuiviBanque() {
       {
         Header: "Mission",
         accessor: "f_mission",
-        Filter: SelectColumnFilter
+        Filter: SelectColumnFilter,
       },
       {
         Header: "Action",
@@ -226,54 +227,25 @@ function SuiviBanque() {
       }}
       handleDateRangeChange={handleDateRangeChange}
     >
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-2">
-        <div className="bg-green-500 overflow-hidden shadow rounded-lg">
-          <div className="p-5">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <BuildingLibraryIcon
-                  className="h-6 w-6 text-white"
-                  aria-hidden="true"
-                />
-              </div>
-              <div className="ml-5 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-white truncate">
-                    Solde banque
-                  </dt>
-                  <dd>
-                    <div className="text-lg font-medium text-white">
-                      {formatNumberToMoney(totalSuiviBanque)} FCFA
-                    </div>
-                  </dd>
-                </dl>
-              </div>
-            </div>
-          </div>
-        </div>
-        {missionSuivi?.map((mission, index) => (
-          <div key={index} className="bg-yellow-500 overflow-hidden shadow rounded-lg">
+      {user?.mission?.id === 0 && (
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-2">
+          <div className="bg-green-500 overflow-hidden shadow rounded-lg">
             <div className="p-5">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <ArchiveBoxIcon
+                  <BuildingLibraryIcon
                     className="h-6 w-6 text-white"
                     aria-hidden="true"
                   />
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-bold text-white truncate">
-                      {mission.mission}
+                    <dt className="text-sm font-medium text-white truncate">
+                      Solde banque
                     </dt>
                     <dd>
-                      <div className="text-sm text-medium text-white">
-                      Versement:  {formatNumberToMoney(mission.versement_total)} FCFA
-                      </div>
-                    </dd>
-                    <dd>
-                      <div className="text-sm font-medium text-white">
-                      Retrait:  {formatNumberToMoney(mission.retrait_total)} FCFA
+                      <div className="text-lg font-medium text-white">
+                        {formatNumberToMoney(totalSuiviBanque)} FCFA
                       </div>
                     </dd>
                   </dl>
@@ -281,8 +253,44 @@ function SuiviBanque() {
               </div>
             </div>
           </div>
-        ))}
-      </div>
+          {missionSuivi?.map((mission, index) => (
+            <div
+              key={index}
+              className="bg-yellow-500 overflow-hidden shadow rounded-lg"
+            >
+              <div className="p-5">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <ArchiveBoxIcon
+                      className="h-6 w-6 text-white"
+                      aria-hidden="true"
+                    />
+                  </div>
+                  <div className="ml-5 w-0 flex-1">
+                    <dl>
+                      <dt className="text-sm font-bold text-white truncate">
+                        {mission.mission}
+                      </dt>
+                      <dd>
+                        <div className="text-sm text-medium text-white">
+                          Versement:{" "}
+                          {formatNumberToMoney(mission.versement_total)} FCFA
+                        </div>
+                      </dd>
+                      <dd>
+                        <div className="text-sm font-medium text-white">
+                          Retrait: {formatNumberToMoney(mission.retrait_total)}{" "}
+                          FCFA
+                        </div>
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
       <div className="mt-6">
         {/* <h1 className="text-2xl font-semibold text-gray-900 mb-2">
             Liste des transactions

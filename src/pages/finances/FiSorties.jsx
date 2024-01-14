@@ -220,56 +220,58 @@ function FiSorties() {
       }}
       handleDateRangeChange={handleDateRangeChange}
     >
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-2">
-        <div className="bg-red-500 overflow-hidden shadow rounded-lg">
-          <div className="p-5">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <BanknotesIcon
-                  className="h-6 w-6 text-white"
-                  aria-hidden="true"
-                />
+      {user?.mission?.id === 0 && (
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-2">
+          <div className="bg-red-500 overflow-hidden shadow rounded-lg">
+            <div className="p-5">
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  <BanknotesIcon
+                    className="h-6 w-6 text-white"
+                    aria-hidden="true"
+                  />
+                </div>
+                <div className="ml-5 w-0 flex-1">
+                  <dl>
+                    <dt className="text-sm font-medium text-white truncate">
+                      Total des sorties
+                    </dt>
+                    <dd>
+                      <div className="text-lg font-medium text-white">
+                        {formatNumberToMoney(totalSortieCaisse)} FCFA
+                      </div>
+                    </dd>
+                  </dl>
+                </div>
               </div>
-              <div className="ml-5 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-white truncate">
-                    Total des sorties
-                  </dt>
-                  <dd>
-                    <div className="text-lg font-medium text-white">
-                      {formatNumberToMoney(totalSortieCaisse)} FCFA
-                    </div>
-                  </dd>
-                </dl>
+            </div>
+          </div>
+          <div className="bg-orange-500 overflow-hidden shadow rounded-lg">
+            <div className="p-5">
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  <BanknotesIcon
+                    className="h-6 w-6 text-white"
+                    aria-hidden="true"
+                  />
+                </div>
+                <div className="ml-5 w-0 flex-1">
+                  <dl>
+                    <dt className="text-sm font-medium text-white truncate">
+                      Total des sorties sur la periode
+                    </dt>
+                    <dd>
+                      <div className="text-lg font-medium text-white">
+                        {formatNumberToMoney(totalSortieCaisseByDate)} FCFA
+                      </div>
+                    </dd>
+                  </dl>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <div className="bg-orange-500 overflow-hidden shadow rounded-lg">
-          <div className="p-5">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <BanknotesIcon
-                  className="h-6 w-6 text-white"
-                  aria-hidden="true"
-                />
-              </div>
-              <div className="ml-5 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-white truncate">
-                    Total des sorties sur la periode
-                  </dt>
-                  <dd>
-                    <div className="text-lg font-medium text-white">
-                      {formatNumberToMoney(totalSortieCaisseByDate)} FCFA
-                    </div>
-                  </dd>
-                </dl>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      )}
       <div className="mt-4">
         <Table
           columns={columns}

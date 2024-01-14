@@ -9,6 +9,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useAppContext } from "../../context/AppState";
 import {
+  createCommunicationList,
   // createCommunicationList,
   deleteCommunicationList,
   getMembres,
@@ -63,29 +64,29 @@ function NewListe() {
 
     console.log("LISTE", listDatas);
 
-    // dispatch(createCommunicationList(listDatas))
-    //   .unwrap()
-    //   .then(() => {
-    //     setNotificationContent({
-    //       type: "success",
-    //       title: "Succès",
-    //       description: "La liste a bien été créée",
-    //     });
+    dispatch(createCommunicationList(listDatas))
+      .unwrap()
+      .then(() => {
+        setNotificationContent({
+          type: "success",
+          title: "Succès",
+          description: "La liste a bien été créée",
+        });
 
-    //     switchNotification(true);
-    //   })
-    //   .catch((err) => {
-    //     setNotificationContent({
-    //       type: "error",
-    //       title: "Erreur",
-    //       description: err,
-    //     });
+        switchNotification(true);
+      })
+      .catch((err) => {
+        setNotificationContent({
+          type: "error",
+          title: "Erreur",
+          description: err,
+        });
 
-    //     switchNotification(true);
-    //   });
+        switchNotification(true);
+      });
 
-    // resetForm();
-    // switchSlideOver(false);
+    resetForm();
+    switchSlideOver(false);
   };
 
   const handleDeleteList = (listId) => {

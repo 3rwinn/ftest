@@ -12,6 +12,7 @@ import {
   FormDatePicker,
   FormField,
   FormSelect,
+  FormSelectWithAction,
   SubmitButton,
 } from "../../components/forms";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,6 +21,7 @@ import { formatDataToSelect, formatLocaleEn } from "../../utils/helpers";
 import {
   createEvenement,
   deleteEvenement,
+  editEvenement,
   getEvenements,
 } from "../../features/quotidien/quotidienSlice";
 import { useAppContext } from "../../context/AppState";
@@ -27,24 +29,149 @@ import dayjs from "dayjs";
 import "dayjs/locale/fr";
 dayjs.locale("fr");
 import calendar from "dayjs/plugin/calendar";
+import Table, { SelectColumnFilter } from "../../components/Table";
+import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
+import NewMission from "../../components/settings/NewMission";
 dayjs.extend(calendar);
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function Evenements() {
+function EditEvent({ eventId, eventDatas }) {
   const dispatch = useDispatch();
+  const { isLoading } = useSelector((state) => state.quotidien);
   const { missions } = useSelector((state) => state.settings);
   const { user } = useSelector((state) => state.auth);
-  const { isLoading, evenements } = useSelector((state) => state.quotidien);
+  const {
+    setNotificationContent,
+    switchNotification,
+    switchSlideOver,
+    switchModal,
+  } = useAppContext();
 
-  const { setNotificationContent, switchNotification } = useAppContext();
+  console.log("missions", missions);
 
   React.useEffect(() => {
     dispatch(getMissions());
-    dispatch(getEvenements());
   }, []);
+
+  const handleQuickAddMission = () => {
+    switchModal(true, {
+      type: "success",
+      title: "Nouvelle mission",
+      description: <NewMission />,
+      noConfirm: true,
+    });
+  };
+
+  const handleSubmit = (values) => {
+    const eventDatas = {
+      id: eventId,
+      datas: {
+        libelle: values.libelle,
+        description: values.description,
+        date: formatLocaleEn(values.date),
+        mission: values.mission,
+      },
+    };
+
+    dispatch(editEvenement(eventDatas))
+      .unwrap()
+      .then(() => {
+        setNotificationContent({
+          type: "success",
+          title: "Succès",
+          description: "L'évènement a bien été modifié",
+        });
+
+        switchNotification(true);
+      })
+      .catch((err) => {
+        console.log(err);
+        setNotificationContent({
+          type: "error",
+          title: "Erreur",
+          description:
+            "Une erreur est survenue lors de la modification de l'évènement",
+        });
+
+        switchNotification(true);
+      });
+
+    switchSlideOver(false);
+  };
+
+  return (
+    <div className="p-3">
+      <Form
+        initialValues={{
+          libelle: eventDatas.libelle,
+          description: eventDatas.description,
+          date: dayjs(eventDatas.date).toDate(),
+          mission: eventDatas.mission,
+        }}
+        onSubmit={handleSubmit}
+      >
+        <div className="space-y-6">
+          <FormField
+            label="Libellé"
+            name="libelle"
+            placeholder="Libellé de l'évènement"
+          />
+          <FormField
+            label="Lieu"
+            name="description"
+            placeholder="Lieu de l'évènement"
+          />
+          <FormDatePicker
+            label="Date"
+            name="date"
+            placeholder="Date de l'évènement"
+          />
+          {user?.mission?.id === 0 && (
+            <FormSelectWithAction
+              label="Mission"
+              name="mission"
+              datas={formatDataToSelect(missions)}
+              placeholder="Mission de l'évènement"
+              actionEvent={handleQuickAddMission}
+            />
+          )}
+
+          <SubmitButton loading={isLoading}>Modifier</SubmitButton>
+        </div>
+      </Form>
+    </div>
+  );
+}
+
+function AddEvent() {
+  const dispatch = useDispatch();
+  const { isLoading } = useSelector((state) => state.quotidien);
+  const { missions } = useSelector((state) => state.settings);
+  const { user } = useSelector((state) => state.auth);
+  const {
+    setNotificationContent,
+    switchNotification,
+    switchModal,
+    switchSlideOver,
+  } = useAppContext();
+
+  console.log("missions", missions);
+
+  React.useEffect(() => {
+    dispatch(getMissions());
+  }, []);
+
+  const handleQuickAddMission = () => {
+    switchModal(true, {
+      type: "success",
+      title: "Nouvelle mission",
+      description: <NewMission />,
+      noConfirm: true,
+    });
+  };
 
   const handleSubmit = (values) => {
     const eventDatas = {
@@ -76,195 +203,204 @@ function Evenements() {
 
         switchNotification(true);
       });
-  };
 
-  const deleteEvent = (id) => {
-    dispatch(deleteEvenement(id))
-      .unwrap()
-      .then(() => {
-        setNotificationContent({
-          type: "success",
-          title: "Succès",
-          description: "L'évènement a bien été supprimé",
-        });
-
-        switchNotification(true);
-      })
-      .catch((err) => {
-        console.log(err);
-        setNotificationContent({
-          type: "error",
-          title: "Erreur",
-          description:
-            "Une erreur est survenue lors de la suppression de l'évènement",
-        });
-
-        switchNotification(true);
-      });
+    switchSlideOver(false);
   };
 
   return (
-    <Layout>
-      <PageContent title={"Evènements"}>
-        <Card>
-          <div>
-            <h2 className="text-lg font-semibold text-gray-900">
-              Prochains évènements
-            </h2>
-            <div className="lg:grid lg:grid-cols-13 lg:gap-x-17">
-              <div className="mt-10 lg:col-start-8 lg:col-end-13 lg:row-start-1 lg:mt-9 xl:col-start-9">
-                <Form
-                  initialValues={{
-                    libelle: "",
-                    description: "",
-                    date: new Date(),
-                    mission: user?.mission?.id === 0 ? null : user?.mission?.id,
-                  }}
-                  onSubmit={handleSubmit}
-                >
-                  {user?.mission?.id === 0 && (
-                    <FormSelect
-                      name={"mission"}
-                      datas={formatDataToSelect(missions)}
-                      label="Mission"
-                    />
-                  )}
+    <div className="p-3">
+      <Form
+        initialValues={{
+          libelle: "",
+          description: "",
+          date: "",
+          mission: user?.mission?.id === 0 ? "" : user?.mission?.id,
+        }}
+        onSubmit={handleSubmit}
+      >
+        <div className="space-y-6">
+          <FormField
+            label="Libellé"
+            name="libelle"
+            placeholder="Libellé de l'évènement"
+          />
+          <FormField
+            label="Lieu"
+            name="description"
+            placeholder="Lieu de l'évènement"
+          />
+          <FormDatePicker
+            label="Date"
+            name="date"
+            placeholder="Date de l'évènement"
+          />
+          {user?.mission?.id === 0 && (
+            <FormSelectWithAction
+              label="Mission"
+              name="mission"
+              datas={formatDataToSelect(missions)}
+              placeholder="Mission de l'évènement"
+              actionEvent={handleQuickAddMission}
+            />
+          )}
+          <SubmitButton loading={isLoading}>Ajouter</SubmitButton>
+        </div>
+      </Form>
+    </div>
+  );
+}
 
-                  <FormField
-                    name={"libelle"}
-                    label={"Libellé de l'évènement"}
-                  />
-                  <FormDatePicker name={"date"} label={"Date de l'évènement"} />
+function Evenements() {
+  const dispatch = useDispatch();
+  const { missions } = useSelector((state) => state.settings);
+  const { user } = useSelector((state) => state.auth);
+  const { isLoading, evenements } = useSelector((state) => state.quotidien);
 
-                  <SubmitButton>Ajouter</SubmitButton>
-                </Form>
-              </div>
-              <ol className="mt-4 divide-y divide-gray-100 text-sm leading-6 lg:col-span-6 xl:col-span-7">
-                {evenements?.map((evenement) => (
-                  <li
-                    key={evenement.id}
-                    className="relative flex space-x-6 py-6 xl:static"
-                  >
-                    {/* <img
-                      src={meeting.imageUrl}
-                      alt=""
-                      className="h-14 w-14 flex-none rounded-full"
-                    /> */}
-                    <div className="flex-auto">
-                      <h3 className="pr-10 font-semibold text-gray-900 xl:pr-0">
-                        {evenement.libelle}
-                      </h3>
-                      <dl className="mt-2 flex flex-col text-gray-500 xl:flex-row">
-                        <div className="flex items-start space-x-3">
-                          <dt className="mt-0.5">
-                            <span className="sr-only">Date</span>
-                            <CalendarIcon
-                              className="h-5 w-5 text-gray-400"
-                              aria-hidden="true"
-                            />
-                          </dt>
-                          <dd>
-                            <time
-                              dateTime={dayjs(evenement.date).format(
-                                "DD/MM/YYYY"
-                              )}
-                            >
-                              {dayjs(evenement.date).format("DD/MM/YYYY")}
-                              {/* {dayjs(evenement.date).calendar()} */}
-                            </time>
-                          </dd>
-                        </div>
-                        {/* <div className="mt-2 flex items-start space-x-3 xl:mt-0 xl:ml-3.5 xl:border-l xl:border-gray-400 xl:border-opacity-50 xl:pl-3.5">
-                          <dt className="mt-0.5">
-                            <span className="sr-only">Location</span>
-                            <MapPinIcon
-                              className="h-5 w-5 text-gray-400"
-                              aria-hidden="true"
-                            />
-                          </dt>
-                          <dd>
-                          {evenement.mission}
-                            {
-                             missions.filter((mission) => mission.id === evenement.mission)[0]
-                                 ?.libelle
-                            }
-                          </dd>
-                        </div> */}
-                      </dl>
-                    </div>
-                    <Menu
-                      as="div"
-                      className="absolute top-6 right-0 xl:relative xl:top-auto xl:right-auto xl:self-center"
-                    >
-                      <div>
-                        <Menu.Button className="-m-2 flex items-center rounded-full p-2 text-gray-500 hover:text-gray-600">
-                          <span className="sr-only">Open options</span>
-                          <EllipsisHorizontalIcon
-                            className="h-5 w-5"
-                            aria-hidden="true"
-                          />
-                        </Menu.Button>
-                      </div>
+  const {
+    setNotificationContent,
+    switchNotification,
+    switchModal,
+    setSlideOverContent,
+    switchSlideOver,
+  } = useAppContext();
 
-                      <Transition
-                        as={Fragment}
-                        enter="transition ease-out duration-100"
-                        enterFrom="transform opacity-0 scale-95"
-                        enterTo="transform opacity-100 scale-100"
-                        leave="transition ease-in duration-75"
-                        leaveFrom="transform opacity-100 scale-100"
-                        leaveTo="transform opacity-0 scale-95"
-                      >
-                        <Menu.Items className="focus:outline-none absolute right-0 z-10 mt-2 w-36 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5">
-                          <div className="py-1">
-                            <Menu.Item>
-                              {({ active }) => (
-                                <span
-                                  onClick={() => deleteEvent(evenement.id)}
-                                  className={classNames(
-                                    active
-                                      ? "bg-gray-100 text-gray-900"
-                                      : "text-gray-700",
-                                    "block px-4 py-2 text-sm cursor-pointer"
-                                  )}
-                                >
-                                  Supprimer
-                                </span>
-                              )}
-                            </Menu.Item>
-                            {/* <Menu.Item>
-                              {({ active }) => (
-                                <a
-                                  href="#"
-                                  className={classNames(
-                                    active
-                                      ? "bg-gray-100 text-gray-900"
-                                      : "text-gray-700",
-                                    "block px-4 py-2 text-sm"
-                                  )}
-                                >
-                                  Cancel
-                                </a>
-                              )}
-                            </Menu.Item> */}
-                          </div>
-                        </Menu.Items>
-                      </Transition>
-                    </Menu>
-                  </li>
-                ))}
+  React.useEffect(() => {
+    dispatch(getMissions());
+    dispatch(getEvenements());
+  }, []);
 
-                {evenements.length === 0 && (
-                  <div className="flex justify-center items-center h-32">
-                    <p className="text-gray-500 text-sm">
-                      Aucun évènement n'a été créé
-                    </p>
-                  </div>
-                )}
-              </ol>
+  const showEditEvenementForm = (eventId, eventDatas) => {
+    setSlideOverContent({
+      title: "Modifier un évènement",
+      description:
+        "Veuillez remplir le formulaire pour modifier cet évènement.",
+      body: <EditEvent eventId={eventId} eventDatas={eventDatas} />,
+    });
+    switchSlideOver(true);
+  };
+
+  const showNewEvenementForm = () => {
+    setSlideOverContent({
+      title: "Nouveau evenement",
+      description:
+        "Veuillez remplir le formulaire pour créer une nouveau evenement.",
+      body: <AddEvent />,
+    });
+    switchSlideOver(true);
+  };
+
+  const handleDeleteEvent = (id) => {
+    switchModal(true, {
+      type: "danger",
+      title: "Supprimer un evenement",
+      description:
+        "Etes-vous sûr de vouloir supprimer ce membre? Cette action est irréversible.",
+      sideEvent: () => {
+        dispatch(deleteEvenement(id))
+          .unwrap()
+          .then(() => {
+            setNotificationContent({
+              type: "success",
+              title: "Succès",
+              description: "L'évènement a bien été supprimé",
+            });
+
+            switchNotification(true);
+          })
+          .catch((err) => {
+            console.log(err);
+            setNotificationContent({
+              type: "error",
+              title: "Erreur",
+              description:
+                "Une erreur est survenue lors de la suppression de l'évènement",
+            });
+
+            switchNotification(true);
+          });
+      },
+    });
+  };
+
+  const [formatedEvents, setFormatedEvents] = React.useState([]);
+  React.useEffect(() => {
+    if (evenements.length > 0) {
+      let newDatas = evenements?.map((event) => {
+        return {
+          f_mission: missions?.find((mission) => mission.id === event.mission)
+            ?.libelle,
+          f_date: dayjs(event.date).format("DD/MM/YYYY"),
+          ...event,
+        };
+      });
+      let eventsToShow =
+        user?.mission?.id !== 0
+          ? newDatas.filter((event) => event.mission === user?.mission?.id)
+          : newDatas;
+      setFormatedEvents(eventsToShow);
+    } else {
+      setFormatedEvents([]);
+    }
+  }, [evenements]);
+
+  const columns = React.useMemo(() => [
+    {
+      Header: "Mission",
+      accessor: "f_mission",
+      Filter: SelectColumnFilter,
+    },
+    {
+      Header: "Libellé",
+      accessor: "libelle",
+    },
+    {
+      Header: "Lieu",
+      accessor: "description",
+    },
+    {
+      Header: "Date",
+      accessor: "f_date",
+    },
+    {
+      Header: "Actions",
+      accessor: "id",
+      Cell: ({ value, row }) => {
+        const eventDatas = row.original;
+        const eventId = value;
+        return (
+          <div className="flex space-x-2">
+            <div
+              onClick={() => {
+                showEditEvenementForm(eventId, eventDatas);
+              }}
+              className="cursor-pointer"
+            >
+              <PencilIcon className="text-mde-red h-5 w-5" />
+            </div>
+            <div
+              onClick={() => handleDeleteEvent(value)}
+              className="cursor-pointer"
+            >
+              <TrashIcon className="text-mde-red h-5 w-5" />
             </div>
           </div>
-        </Card>
+        );
+      },
+    },
+  ]);
+
+  return (
+    <Layout>
+      <PageContent
+        title={"Evènements"}
+        actionButton={{
+          title: "Ajouter un évènement",
+          event: showNewEvenementForm,
+        }}
+      >
+        <div className="mt-2">
+          <Table columns={columns} data={formatedEvents} withExport={false} />
+        </div>
       </PageContent>
     </Layout>
   );

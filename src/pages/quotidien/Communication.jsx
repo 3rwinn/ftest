@@ -71,7 +71,8 @@ function Communication() {
         return {
           id: list.id,
           name: list.libelle,
-          value: JSON.stringify(list.membres),
+          // value: JSON.stringify(list?.membres),
+          value: list?.membres,
         };
       });
 

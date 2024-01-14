@@ -10,9 +10,7 @@ import {
 } from "../forms";
 import * as Yup from "yup";
 import { useAppContext } from "../../context/AppState";
-import {
-  editSuiviBanque,
-} from "../../features/finance/financeSlice";
+import { editSuiviBanque } from "../../features/finance/financeSlice";
 import { formatDataToSelect, formatLocaleEn } from "../../utils/helpers";
 import dayjs from "dayjs";
 import { getMissions } from "../../features/settings/settingsSlice";
@@ -26,14 +24,14 @@ const validationSchema = Yup.object().shape({
 });
 
 const typeActions = [
-    { id: 1, value: "versement", name: "Versement" },
-    { id: 2, value: "retrait", name: "Retrait" },
-  ]
+  { id: 1, value: "versement", name: "Versement" },
+  { id: 2, value: "retrait", name: "Retrait" },
+];
 
 function EditSuiviBanque({ transactionId, currentTransaction }) {
   const dispatch = useDispatch();
   const { isLoading } = useSelector((state) => state.finances);
-  //   const { user } = useSelector((state) => state.auth.user);
+  const { user } = useSelector((state) => state.auth.user);
   const { missions } = useSelector((state) => state.settings);
 
   React.useEffect(() => {
@@ -105,18 +103,16 @@ function EditSuiviBanque({ transactionId, currentTransaction }) {
         validationSchema={validationSchema}
       >
         <FormDatePicker label={"Date"} name={"date"} />
-        <FormSelectWithAction
-          name={"mission"}
-          label={"Mission"}
-          datas={formatDataToSelect(missions)}
-          actionEvent={handleQuickAddMission}
-        />
+        {user?.mission?.id === 0 && (
+          <FormSelectWithAction
+            name={"mission"}
+            label={"Mission"}
+            datas={formatDataToSelect(missions)}
+            actionEvent={handleQuickAddMission}
+          />
+        )}
         <FormField label={"Montant"} type={"number"} name={"montant"} />
-        <FormSelect
-          name={"action"}
-          label={"Action"}
-          datas={typeActions}
-        />
+        <FormSelect name={"action"} label={"Action"} datas={typeActions} />
         <FormField label={"Commentaire"} name={"commentaire"} />
 
         <SubmitButton loading={isLoading}>Modifier</SubmitButton>

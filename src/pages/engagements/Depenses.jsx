@@ -46,6 +46,8 @@ function Depenses() {
     (state) => state.engagement
   );
 
+  const { user } = useSelector((state) => state.auth);
+
   const {
     switchSlideOver,
     setSlideOverContent,
@@ -55,7 +57,7 @@ function Depenses() {
   } = useAppContext();
 
   const [dateRange, setDateRange] = React.useState({
-    from:  `${new Date().getFullYear()}-01-01`,
+    from: `${new Date().getFullYear()}-01-01`,
     to: new Date(),
   });
 
@@ -194,57 +196,59 @@ function Depenses() {
       actionButton={{ title: "Nouvelle depense", event: showNewDepenseForm }}
       handleDateRangeChange={handleDateRangeChange}
     >
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-2">
-        <div className="bg-red-500 overflow-hidden shadow rounded-lg">
-          <div className="p-5">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <BanknotesIcon
-                  className="h-6 w-6 text-white"
-                  aria-hidden="true"
-                />
-              </div>
-              <div className="ml-5 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-white truncate">
-                    Total des dépenses
-                  </dt>
-                  <dd>
-                    <div className="text-lg font-medium text-white">
-                      {formatNumberToMoney(totalDepense)} FCFA
-                    </div>
-                  </dd>
-                </dl>
+      {user?.mission?.id === 0 && (
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-2">
+          <div className="bg-red-500 overflow-hidden shadow rounded-lg">
+            <div className="p-5">
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  <BanknotesIcon
+                    className="h-6 w-6 text-white"
+                    aria-hidden="true"
+                  />
+                </div>
+                <div className="ml-5 w-0 flex-1">
+                  <dl>
+                    <dt className="text-sm font-medium text-white truncate">
+                      Total des dépenses
+                    </dt>
+                    <dd>
+                      <div className="text-lg font-medium text-white">
+                        {formatNumberToMoney(totalDepense)} FCFA
+                      </div>
+                    </dd>
+                  </dl>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="bg-orange-500 overflow-hidden shadow rounded-lg">
-          <div className="p-5">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <ArrowUpLeftIcon
-                  className="h-6 w-6 text-white"
-                  aria-hidden="true"
-                />
-              </div>
-              <div className="ml-5 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-white truncate">
-                    Total des dépenses sur la periode
-                  </dt>
-                  <dd>
-                    <div className="text-lg font-medium text-white">
-                      {formatNumberToMoney(totalDepenseByDate)} FCFA
-                    </div>
-                  </dd>
-                </dl>
+          <div className="bg-orange-500 overflow-hidden shadow rounded-lg">
+            <div className="p-5">
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  <ArrowUpLeftIcon
+                    className="h-6 w-6 text-white"
+                    aria-hidden="true"
+                  />
+                </div>
+                <div className="ml-5 w-0 flex-1">
+                  <dl>
+                    <dt className="text-sm font-medium text-white truncate">
+                      Total des dépenses sur la periode
+                    </dt>
+                    <dd>
+                      <div className="text-lg font-medium text-white">
+                        {formatNumberToMoney(totalDepenseByDate)} FCFA
+                      </div>
+                    </dd>
+                  </dl>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
       <div className="mt-6">
         <h1 className="text-2xl font-semibold text-gray-900 mb-2">
           Liste des dépenses
