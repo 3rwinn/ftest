@@ -25,7 +25,7 @@ const validationSchema = Yup.object().shape({
 function NewSuiviBanque() {
   const dispatch = useDispatch();
   const { isLoading } = useSelector((state) => state.finances);
-  const { user } = useSelector((state) => state.auth.user);
+  const { user } = useSelector((state) => state.auth);
   const { missions } = useSelector((state) => state.settings);
 
   React.useEffect(() => {
