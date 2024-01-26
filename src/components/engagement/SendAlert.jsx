@@ -9,11 +9,15 @@ const validationSchema = Yup.object().shape({
   message: Yup.string().required("Ce champ est requis."),
 });
 
-const DEFAULT_MESSAGE =
-  "Cher(e) membre, nous vous rappellons le paiement de votre engagement pour l'année 2024.";
+// const DEFAULT_MESSAGE =
+//   "Cher(e) membre, nous vous rappellons le paiement de votre engagement pour l'année 2024.";
 
-function SendAlert({ contact }) {
+function SendAlert({ contact, name, engagement }) {
   const dispatch = useDispatch();
+
+  const DEFAULT_MESSAGE =
+  // `Cher(e) membre, nous vous rappellons le paiement de votre engagement pour l'année 2024.`;
+  `Cher(e) ${name}, nous vous remercions pour votre engagement ; Votre Alliance pour l'année 2024 est de ${engagement} FCFA. Pour vos versements veuillez approcher le CTAM (Arnaud BOTI : 0777248466). Soyons des Fils ! DIEU VOUS BENISSE.`;
 
   const { switchModal, switchNotification, setNotificationContent } =
     useAppContext();

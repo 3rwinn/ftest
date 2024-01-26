@@ -37,17 +37,23 @@ function ShowEngagementDetails({ engagementId, engagementData }) {
   console.log("mouvements", mouvements);
 
   const {
-    // membre__nom,
-    // membre__prenom,
+    membre__nom,
+    membre__prenom,
     // mouvement_percent,
     // restant_percent,
     membre__contact,
     f_versement,
     f_reste,
-    // f_palier,
+    f_palier,
   } = engagementData;
 
   // console.log("engagementData", engagementData);
+
+  // function to cut text after the first space
+  const cutText = (text) => {
+    const textArray = text.split(" ");
+    return textArray[0];
+  };
 
   const { switchModal } = useAppContext();
 
@@ -55,7 +61,13 @@ function ShowEngagementDetails({ engagementId, engagementData }) {
     switchModal(true, {
       title: "Envoyer une alerte",
       type: "error",
-      description: <SendAlert contact={membre__contact} />,
+      description: (
+        <SendAlert
+          contact={membre__contact}
+          name={`${cutText(membre__prenom)} ${membre__nom}`}
+          engagement={f_palier}
+        />
+      ),
       noConfirm: true,
     });
   };
@@ -149,8 +161,8 @@ function ShowEngagementDetails({ engagementId, engagementData }) {
         doc.text(`Engagement: ${engagementData?.f_palier} FCFA`, 148, 51);
         doc.text(`Total versements: ${f_versement} FCFA`, 144, 57);
         doc.text(`Total restants: ${f_reste} FCFA`, 148, 63);
-        doc.setFontSize(15)
-        doc.text(`Liste des versements`, data.settings.margin.left, 73)
+        doc.setFontSize(15);
+        doc.text(`Liste des versements`, data.settings.margin.left, 73);
       },
       margin: {
         top: 75,
