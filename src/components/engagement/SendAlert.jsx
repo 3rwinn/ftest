@@ -1,7 +1,7 @@
 import React from "react";
-import { Form, FormField, SubmitButton, Textarea } from "../forms";
+import { Form, SubmitButton, Textarea } from "../forms";
 import * as Yup from "yup";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { sendAlertSms } from "../../features/quotidien/quotidienSlice";
 import { useAppContext } from "../../context/AppState";
 
@@ -16,8 +16,8 @@ function SendAlert({ contact, name, engagement }) {
   const dispatch = useDispatch();
 
   const DEFAULT_MESSAGE =
-  // `Cher(e) membre, nous vous rappellons le paiement de votre engagement pour l'année 2024.`;
-  `Cher(e) ${name}, nous vous remercions pour votre engagement ; Votre Alliance pour l'année 2024 est de ${engagement} FCFA. Pour vos versements veuillez approcher le CTAM (Arnaud BOTI : 0777248466). Soyons des Fils ! DIEU VOUS BENISSE.`;
+    // `Cher(e) membre, nous vous rappellons le paiement de votre engagement pour l'année 2024.`;
+    `Cher(e) ${name}, nous vous remercions pour votre engagement ; Votre Alliance pour l'année 2024 est de ${engagement} FCFA. Pour vos versements veuillez approcher le CTAM (Arnaud BOTI : 0777248466). Soyons des Fils ! DIEU VOUS BENISSE.`;
 
   const { switchModal, switchNotification, setNotificationContent } =
     useAppContext();
@@ -45,10 +45,10 @@ function SendAlert({ contact, name, engagement }) {
         setNotificationContent({
           type: "error",
           title: "Erreur",
-          description: "Une erreur est survenue lors de l'envoi de l'alerte SMS.",
+          description:
+            "Une erreur est survenue lors de l'envoi de l'alerte SMS.",
         });
         switchNotification(true);
-
       });
   };
 
