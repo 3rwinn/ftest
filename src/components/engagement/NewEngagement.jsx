@@ -2,6 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Form,
+  FormComboSelect,
   FormDatePicker,
   FormField,
   FormSelect,
@@ -136,11 +137,13 @@ function NewEngagement() {
             actionEvent={handleQuickAddMission}
           />
         )}
-        <FormSelect
+        {/* <FormSelect */}
+        <FormComboSelect
           label={"Membre"}
           name={"membre"}
           datas={formatMembreToSelect(filteredMembers)}
         />
+        <div className="mb-4" />
         <FormSelectWithAction
           label={"Palier"}
           name={"palier"}
