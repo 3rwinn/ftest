@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 import { sendAlertSms } from "../../features/quotidien/quotidienSlice";
 import { useAppContext } from "../../context/AppState";
+import dayjs from "dayjs";
 
 const validationSchema = Yup.object().shape({
   message: Yup.string().required("Ce champ est requis."),
@@ -20,14 +21,16 @@ function SendAlert({ contact, name, engagement, versement, reste }) {
     return text.replace(/\s/g, ".");
   };
 
+  const date = new Date();
+  const f_date = dayjs(date).format("DD/MM/YYYY")
+
   const DEFAULT_MESSAGE =
     // `Cher(e) membre, nous vous rappellons le paiement de votre engagement pour l'année 2024.`;
     // `Cher(e) ${name}, nous vous remercions pour votre engagement ; Votre Alliance pour l'année 2024 est de ${replaceSpaceWithDot(engagement)} FCFA.
     // Pour vos versements veuillez approcher le CTAM (Arnaud BOTI : 0777248466). Soyons des Fils ! DIEU VOUS BENISSE.`;
-    `Cher(e) ${name}, ci-dessous la situation de votre alliance 2024 au 06 Mars. Votre alliance: ${replaceSpaceWithDot(
+    `Cher(e) ${name}, ci-dessous la situation au ${f_date} de votre alliance. Votre alliance: ${replaceSpaceWithDot(
       engagement
-    )} FCFA. Total versement: ${replaceSpaceWithDot(versement)} FCFA.
-     Montant restant: ${replaceSpaceWithDot(reste)} FCFA. DIEU VOUS BENISSE.`;
+    )} FCFA. Total versement: ${replaceSpaceWithDot(versement)} FCFA. Montant restant: ${replaceSpaceWithDot(reste)} FCFA. DIEU VOUS BENISSE.`;
 
   const { switchModal, switchNotification, setNotificationContent } =
     useAppContext();
