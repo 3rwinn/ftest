@@ -12,7 +12,7 @@ const validationSchema = Yup.object().shape({
 // const DEFAULT_MESSAGE =
 //   "Cher(e) membre, nous vous rappellons le paiement de votre engagement pour l'année 2024.";
 
-function SendAlert({ contact, name, engagement }) {
+function SendAlert({ contact, name, engagement, versement, reste }) {
   const dispatch = useDispatch();
 
   // function to replace space with dot in given text
@@ -22,7 +22,12 @@ function SendAlert({ contact, name, engagement }) {
 
   const DEFAULT_MESSAGE =
     // `Cher(e) membre, nous vous rappellons le paiement de votre engagement pour l'année 2024.`;
-    `Cher(e) ${name}, nous vous remercions pour votre engagement ; Votre Alliance pour l'année 2024 est de ${replaceSpaceWithDot(engagement)} FCFA. Pour vos versements veuillez approcher le CTAM (Arnaud BOTI : 0777248466). Soyons des Fils ! DIEU VOUS BENISSE.`;
+    // `Cher(e) ${name}, nous vous remercions pour votre engagement ; Votre Alliance pour l'année 2024 est de ${replaceSpaceWithDot(engagement)} FCFA.
+    // Pour vos versements veuillez approcher le CTAM (Arnaud BOTI : 0777248466). Soyons des Fils ! DIEU VOUS BENISSE.`;
+    `Cher(e) ${name}, ci-dessous la situation de votre alliance 2024 au 06 Mars. Votre alliance: ${replaceSpaceWithDot(
+      engagement
+    )} FCFA. Total versement: ${replaceSpaceWithDot(versement)} FCFA.
+     Montant restant: ${replaceSpaceWithDot(reste)} FCFA. DIEU VOUS BENISSE.`;
 
   const { switchModal, switchNotification, setNotificationContent } =
     useAppContext();

@@ -66,6 +66,8 @@ function ShowEngagementDetails({ engagementId, engagementData }) {
           contact={membre__contact}
           name={`${cutText(membre__prenom)} ${membre__nom}`}
           engagement={f_palier}
+          versement={f_versement}
+          reste={f_reste}
         />
       ),
       noConfirm: true,
