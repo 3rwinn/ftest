@@ -1,12 +1,18 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Form, FormField, FormSelect, SubmitButton } from "../forms";
+import {
+  Form,
+  FormDatePicker,
+  FormField,
+  FormSelect,
+  SubmitButton,
+} from "../forms";
 import * as Yup from "yup";
 import { editMouvement } from "../../features/engagement/engagementSlice";
 import { getMissions, getPaliers } from "../../features/settings/settingsSlice";
 import { getMembres } from "../../features/quotidien/quotidienSlice";
 import { useAppContext } from "../../context/AppState";
-import { formatDataToSelect } from "../../utils/helpers";
+import { formatDataToSelect, formatLocaleEn } from "../../utils/helpers";
 import { getEngagements } from "../../features/engagement/engagementSlice";
 import dayjs from "dayjs";
 
@@ -52,7 +58,9 @@ function EditMouvement({ mouvementId, currentMouvement }) {
       });
       let engagementToShow =
         user?.mission?.id !== 0
-          ? formatedEngagements?.filter((eng) => eng.mission === user?.mission?.id)
+          ? formatedEngagements?.filter(
+              (eng) => eng.mission === user?.mission?.id
+            )
           : formatedEngagements;
       setFormatedEngagements(engagementToShow);
     }
@@ -64,6 +72,7 @@ function EditMouvement({ mouvementId, currentMouvement }) {
       datas: {
         engagement: values.engagement,
         montant: values.montant,
+        date: formatLocaleEn(values.date),
       },
     };
     // console.log("MBDT", mouvementData);
@@ -108,6 +117,7 @@ function EditMouvement({ mouvementId, currentMouvement }) {
           datas={formatedEngagements}
         />
         <FormField label={"Montant"} type={"number"} name={"montant"} />
+        <FormDatePicker name={"date"} label={"Date"} />
 
         <SubmitButton loading={isLoading}>Ajouter</SubmitButton>
       </Form>
