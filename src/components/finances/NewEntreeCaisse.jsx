@@ -7,6 +7,7 @@ import {
   FormSelectWithAction,
   FormDatePicker,
   SubmitButton,
+  FormUpload,
 } from "../forms";
 import * as Yup from "yup";
 import {
@@ -33,7 +34,7 @@ function NewEntreeCaisse() {
   const { missions, entrees } = useSelector((state) => state.settings);
   const { user } = useSelector((state) => state.auth);
 
-  console.log("USR", user)
+  console.log("USR", user);
 
   const {
     switchSlideOver,
@@ -73,6 +74,7 @@ function NewEntreeCaisse() {
       commentaire: values.commentaire,
       date: formatLocaleEn(values.date),
       auteur: values.auteur,
+      facture: values.facture
     };
     dispatch(addCaisseEntree(entreeData))
       .unwrap()
@@ -106,6 +108,7 @@ function NewEntreeCaisse() {
           commentaire: "",
           date: new Date(),
           auteur: user?.user?.id,
+          facture: null,
         }}
         onSubmit={handleSubmit}
         validationSchema={validationSchema}
@@ -130,6 +133,12 @@ function NewEntreeCaisse() {
 
         <FormField name={"montant"} type={"number"} label={"Montant"} />
         <FormField name={"commentaire"} label={"Commentaire"} />
+        <FormUpload
+          name={"facture"}
+          label="Fichier"
+          type="Fichier en .pdf autorisé"
+          accept=".pdf,"
+        />
 
         <SubmitButton>Ajouter</SubmitButton>
       </Form>

@@ -49,9 +49,19 @@ const addCaisseEntree = async (entreeData, token) => {
     },
   };
 
+  const datasToSend = new FormData();
+  datasToSend.append("date", entreeData.date);
+  datasToSend.append("mission", entreeData.mission);
+  datasToSend.append("type_entree", entreeData.type_entree);
+  datasToSend.append("commentaire", entreeData.commentaire);
+  datasToSend.append("montant", entreeData.montant);
+  datasToSend.append("auteur", entreeData.auteur);
+  entreeData.facture && datasToSend.append("facture", entreeData.facture);
+
   const response = await axios.post(
     FINANCE_API_URL + "/entrees",
-    entreeData,
+    // entreeData,
+    datasToSend,
     config
   );
 
@@ -119,7 +129,6 @@ const addCaisseSortie = async (sortieData, token) => {
     },
   };
 
-
   const datasToSend = new FormData();
   datasToSend.append("date", sortieData.date);
   datasToSend.append("mission", sortieData.mission);
@@ -127,9 +136,7 @@ const addCaisseSortie = async (sortieData, token) => {
   datasToSend.append("commentaire", sortieData.commentaire);
   datasToSend.append("montant", sortieData.montant);
   datasToSend.append("auteur", sortieData.auteur);
-  sortieData.facture && datasToSend.append("facture", sortieData.facture)
-
-
+  sortieData.facture && datasToSend.append("facture", sortieData.facture);
 
   const response = await axios.post(
     FINANCE_API_URL + "/sorties",

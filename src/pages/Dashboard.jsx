@@ -296,7 +296,7 @@ function Dashboard() {
                       categories={["Entrées", "Dépenses"]}
                       colors={["green", "red"]}
                       valueFormatter={dataFormatter}
-                      yAxisWidth={68}
+                      yAxisWidth={108}
                       noDataText="Aucune donnée pour le moment"
                     />
                   </dd>
@@ -319,7 +319,7 @@ function Dashboard() {
                       categories={["Dime"]}
                       colors={["blue"]}
                       valueFormatter={dataFormatter}
-                      yAxisWidth={68}
+                      yAxisWidth={88}
                       noDataText="Aucune donnée pour le moment"
                     />
                   </dd>
@@ -340,7 +340,7 @@ function Dashboard() {
                       categories={["Offrande"]}
                       colors={[ "yellow"]}
                       valueFormatter={dataFormatter}
-                      yAxisWidth={68}
+                      yAxisWidth={88}
                       noDataText="Aucune donnée pour le moment"
                     />
                   </dd>

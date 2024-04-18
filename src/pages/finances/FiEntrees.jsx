@@ -7,6 +7,7 @@ import {
   BanknotesIcon,
   PencilIcon,
   TrashIcon,
+  DocumentIcon,
 } from "@heroicons/react/24/solid";
 import { useAppContext } from "../../context/AppState";
 import {
@@ -23,6 +24,7 @@ import NewEntreeCaisse from "../../components/finances/NewEntreeCaisse";
 import EditEntreeCaisse from "../../components/finances/EditEntreeCaisse";
 import { formatLocaleEn, formatNumberToMoney } from "../../utils/helpers";
 import CustomDateRangePicker from "../../components/common/CustomDateRangePicker";
+import backend from "../../constants/config";
 
 function Container({ title, actionButton, handleDateRangeChange, children }) {
   return (
@@ -188,8 +190,19 @@ function FiEntrees() {
         Header: "Actions",
         accessor: "id",
         Cell: ({ value, row }) => {
+          let baseUrl = backend.BACKEND;
           return (
             <div className="flex items-center space-x-2">
+              {row.original.facture !== null && (
+                <a
+                  className="text-mde-red hover:text-gray-900"
+                  href={`${baseUrl}${row.original.facture}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <DocumentIcon className="h-5 w-5" />
+                </a>
+              )}
               <button
                 className="text-mde-red hover:text-gray-900"
                 onClick={() => {
