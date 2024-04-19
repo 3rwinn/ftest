@@ -72,6 +72,13 @@ function EngagementOverview() {
     };
   });
 
+  const mouvementByMonths = stats?.mouvement_by_month?.map((item) => {
+    return {
+      name: item.french_month,
+      Versement: item?.mouvement_sum
+    }
+  })
+
   const dataFormatter = (number) => {
     return "" + Intl.NumberFormat("us").format(number).toString();
   };
@@ -82,6 +89,8 @@ function EngagementOverview() {
       setCurrentMission(stats?.engagement_by_mission[0]?.mission__id);
     }
   }, [stats]);
+
+  console.log("stats_month", stats.mouvement_by_month)
 
   if (isLoading || stats.length === 0)
     return (
@@ -102,7 +111,7 @@ function EngagementOverview() {
             value={stats?.engagement_count}
             icon={
               <InformationCircleIcon className="h-6 w-6 text-white" aria-hidden="true" />
-            }
+            } 
           />
           <StatCard
             reverse={true}
@@ -174,7 +183,8 @@ function EngagementOverview() {
                 <dd className="mt-1">
                   <AreaChart
                     className="h-72 mt-4"
-                    data={mouvementsByDays}
+                    // data={mouvementsByDays}
+                    data={mouvementByMonths}
                     index="name"
                     categories={["Versement"]}
                     colors={["green"]}
