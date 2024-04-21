@@ -174,14 +174,122 @@ function SpecialRapportBtn({
         headerStyles,
         startY: doc.autoTable.previous.finalY + 15,
         willDrawPage: (data) => {
-            doc.setFontSize(13);
+          doc.setFontSize(13);
           doc.setFont(undefined, "bold");
-            doc.text(`Point mensuel des versements`, data.settings.margin.left, doc.autoTable.previous.finalY + 10);
+          doc.text(
+            `Point mensuel des versements`,
+            data.settings.margin.left,
+            doc.autoTable.previous.finalY + 10
+          );
         },
-       
-      })
+      });
 
       doc.save("RapportEngagement.pdf");
+    } else {
+      const doc = new jsPDF();
+      const mycols = ["Mois", "Entrées", "Dépenses", "Reste"];
+      let mydatas = [];
+      let dataWanted = realData?.point_mensuel;
+
+      console.log("pefefef", realData?.point_mensuel)
+
+      dataWanted.map((dw) => {
+        let datas = [
+          dw.date,
+          formatNumberToMoney(dw.entrees),
+          formatNumberToMoney(dw.depenses),
+          formatNumberToMoney(Number(dw.entrees - dw.depenses)),
+        ];
+        return mydatas.push(datas);
+      });
+      doc.autoTable({
+        head: [mycols],
+        body: mydatas,
+        headerStyles,
+        willDrawPage: (data) => {
+          doc.addImage(
+            imageBase64,
+            "PNG",
+            data.settings.margin.left, // centerX,
+            10, // centerY,
+            imageWidth,
+            imageHeight
+          );
+          doc.setFontSize(15);
+          doc.setFont(undefined, "bold");
+          doc.text(
+            "Point financier, mission: ADS " + realData?.mission,
+            data.settings.margin.left,
+            46
+          );
+          doc.setFont(undefined, "normal");
+          doc.setFontSize(12);
+          doc.text(
+            `Periode: ${dayjs(realData?.date_debut).format(
+              "DD/MM/YYYY"
+            )} - ${dayjs(realData?.date_fin).format("DD/MM/YYYY")}`,
+            data.settings.margin.left,
+            51
+          );
+          doc.text(
+            `Total offrande: ${formatNumberToMoney(realData?.offrande)} FCFA`,
+            data.settings.margin.left,
+            66
+          );
+          doc.text(
+            `Total dime: ${formatNumberToMoney(realData?.dime)} FCFA`,
+            data.settings.margin.left,
+            71
+          );
+          doc.text(
+            `Total autre: ${formatNumberToMoney(realData?.autre_entree)} FCFA`,
+            data.settings.margin.left,
+            76
+          );
+          doc.text(
+            `Montant total: ${formatNumberToMoney(
+              realData?.autre_entree + realData?.dime + realData?.offrande
+            )} FCFA`,
+            data.settings.margin.left,
+            81
+          );
+          // Right
+          doc.text(
+            `Total des dépenses: ${formatNumberToMoney(
+              realData?.depense
+            )} FCFA`,
+            190,
+            66,
+            {
+              align: "right",
+            }
+          );
+          doc.text(
+            `Solde caisse: ${formatNumberToMoney(realData?.caisse)} FCFA`,
+            190,
+            71,
+            {
+              align: "right",
+            }
+          );
+          doc.text(
+            `Solde banque: ${formatNumberToMoney(realData?.banque)} FCFA`,
+            190,
+            76,
+            {
+              align: "right",
+            }
+          );
+          doc.setFont(undefined, "bold");
+          doc.text(`Détails des entrées par mois`, data.settings.margin.left, 100);
+          doc.setTextColor(100);
+        },
+        margin: {
+          top: 105,
+        },
+      });
+
+      doc.save("RapportFinances.pdf");
     }
   };
 

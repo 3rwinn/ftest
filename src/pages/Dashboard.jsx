@@ -39,6 +39,7 @@ import {
   GiftIcon,
   InboxIcon,
 } from "@heroicons/react/24/outline";
+import SpecialRapportBtn from "../components/SpecialRapportBtn";
 
 function Dashboard() {
   const dispatch = useDispatch();
@@ -148,6 +149,36 @@ function Dashboard() {
     return datas;
   }
 
+  function formatEntreeDepenseDatasForRapport(data1, data2) {
+    let datas = [];
+    data1?.forEach((item) => {
+      data2?.forEach((item2) => {
+        if (item?.date__month === item2?.date__month) {
+          const data = {
+            date: getMonthName(
+              selectedDateDebut,
+              selectedDateFin,
+              item.date__month - 1
+            ),
+            entrees: item?.entree_sum,
+            depenses: item2?.sortie_sum,
+          };
+          datas.push(data);
+        }
+        // else {
+        //   const data = {
+        //     date: item.date__month,
+        //     Entree: item?.entree_sum,
+        //     Sortie: 0,
+        //   };
+        //   datas.push(data);
+        // }
+      });
+    });
+
+    return datas;
+  }
+
   //  function to calculate the variation between m and m - 1
   const calculateVariation = (m, m1) => {
     if (m === undefined || m1 === undefined) {
@@ -187,6 +218,8 @@ function Dashboard() {
     stats?.sortie_by_month
   );
 
+  console.log("missions", missions);
+
   return (
     <>
       <Layout>
@@ -212,6 +245,26 @@ function Dashboard() {
               <FormDatePicker minDate={null} label={"Du"} name={"date_debut"} />
               <FormDatePicker label={"Au"} name={"date_fin"} />
               <SubmitButton>Rechercher</SubmitButton>
+              <SpecialRapportBtn
+                mode="finances"
+                realData={{
+                  mission: missions?.find(
+                    (mission) => mission.id === selectedMission
+                  )?.libelle,
+                  date_debut: selectedDateDebut,
+                  date_fin: selectedDateFin,
+                  dime: stats?.total_entree_dime,
+                  offrande: stats?.total_entree_offrande,
+                  depense: stats?.total_depense,
+                  caisse: stats?.solde_caisse,
+                  banque: stats?.solde_banque,
+                  entree: stats?.entre_by_month,
+                  point_mensuel: formatEntreeDepenseDatasForRapport(stats?.entree_by_month, stats?.sortie_by_month),
+                  autre_entree: stats?.total_entree_other,
+                  entree_dime: stats?.entree_dime_for_last_6_month,
+                  entree_offrance: stats?.entree_offrande_for_last_6_month,
+                }}
+              />
             </Form>
           </div>
           <div className="mb-5 grid grid-cols-1 gap-5 sm:grid-cols-3 lg:grid-cols-3">
@@ -221,10 +274,7 @@ function Dashboard() {
               title={"Solde caisse"}
               value={`${formatNumberToMoney(stats?.solde_caisse)} FCFA`}
               icon={
-                <InboxIcon
-                  className="h-6 w-6 text-white"
-                  aria-hidden="true"
-                />
+                <InboxIcon className="h-6 w-6 text-white" aria-hidden="true" />
               }
             />
             <StatCard
@@ -253,9 +303,9 @@ function Dashboard() {
             />
           </div>
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-2">
-          <StatCard
-             reverse={true}
-             bgColor="bg-blue-500"
+            <StatCard
+              reverse={true}
+              bgColor="bg-blue-500"
               title={"Total dîmes"}
               value={`${formatNumberToMoney(stats?.total_entree_dime)} FCFA`}
               icon={
@@ -276,10 +326,7 @@ function Dashboard() {
                 <GiftIcon className="h-6 w-6 text-white" aria-hidden="true" />
               }
             />
-            
           </div>
-
-         
 
           <div className="mt-5">
             <div className="bg-white overflow-hidden shadow rounded-lg">
@@ -338,7 +385,7 @@ function Dashboard() {
                       data={offrandesLast6months}
                       index="date"
                       categories={["Offrande"]}
-                      colors={[ "yellow"]}
+                      colors={["yellow"]}
                       valueFormatter={dataFormatter}
                       yAxisWidth={88}
                       noDataText="Aucune donnée pour le moment"
