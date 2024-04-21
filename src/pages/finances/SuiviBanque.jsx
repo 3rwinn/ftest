@@ -227,7 +227,7 @@ function SuiviBanque() {
       }}
       handleDateRangeChange={handleDateRangeChange}
     >
-      {user?.mission?.id === 0 && (
+      {user?.mission?.id === 0 && missionSuivi.length > 0  && (
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-2">
           <div className="bg-green-500 overflow-hidden shadow rounded-lg">
             <div className="p-5">
@@ -245,7 +245,8 @@ function SuiviBanque() {
                     </dt>
                     <dd>
                       <div className="text-lg font-medium text-white">
-                        {formatNumberToMoney(totalSuiviBanque)} FCFA
+                        {/* {formatNumberToMoney(totalSuiviBanque)} FCFA */}
+                        {formatNumberToMoney(Number(missionSuivi[0]?.versement_total - missionSuivi[0]?.retrait_total))} FCFA
                       </div>
                     </dd>
                   </dl>
