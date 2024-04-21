@@ -28,6 +28,7 @@ import {
 } from "@heroicons/react/24/solid";
 import StatCard from "../../components/stats/StatCard";
 import dayjs from "dayjs";
+import SpecialRapportBtn from "../../components/SpecialRapportBtn";
 
 function EngagementOverview() {
   const dispatch = useDispatch();
@@ -65,7 +66,7 @@ function EngagementOverview() {
 
   // Area chart datas
   const mouvementsByDays = stats?.mouvement_by_day?.map((item) => {
-  // const mouvementsByDays = stats?.mouvement_by_month?.map((item) => {
+    // const mouvementsByDays = stats?.mouvement_by_month?.map((item) => {
     return {
       name: dayjs(item?.date).format("DD/MM/YYYY"),
       Versement: item?.mouvement_sum,
@@ -75,9 +76,9 @@ function EngagementOverview() {
   const mouvementByMonths = stats?.mouvement_by_month?.map((item) => {
     return {
       name: item.french_month,
-      Versement: item?.mouvement_sum
-    }
-  })
+      Versement: item?.mouvement_sum,
+    };
+  });
 
   const dataFormatter = (number) => {
     return "" + Intl.NumberFormat("us").format(number).toString();
@@ -90,7 +91,7 @@ function EngagementOverview() {
     }
   }, [stats]);
 
-  console.log("stats_month", stats.mouvement_by_month)
+  console.log("stats", stats);
 
   if (isLoading || stats.length === 0)
     return (
@@ -102,7 +103,24 @@ function EngagementOverview() {
     );
   return (
     <Layout>
-      <PageContent title="Vue d'ensemble">
+      <PageContent
+        title="Vue d'ensemble"
+        prevActionButton={
+          <SpecialRapportBtn
+            realData={{
+              nb_total: stats?.engagement_count,
+              mt_engagement: stats?.engagement_sum,
+              mt_versement: stats?.mouvement_sum,
+              mt_restant: stats?.restant,
+              mt_depense: stats?.depense_sum,
+              taux_versement: Number(100 - stats?.restant_percent),
+              taux_restant: stats?.restant_percent,
+              mission_datas: stats?.engagement_by_mission,
+              mensuel_datas: stats?.mouvement_by_month,
+            }}
+          />
+        }
+      >
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-2">
           <StatCard
             bgColor="bg-blue-500"
@@ -110,8 +128,11 @@ function EngagementOverview() {
             title={"Nombre d'engagements"}
             value={stats?.engagement_count}
             icon={
-              <InformationCircleIcon className="h-6 w-6 text-white" aria-hidden="true" />
-            } 
+              <InformationCircleIcon
+                className="h-6 w-6 text-white"
+                aria-hidden="true"
+              />
+            }
           />
           <StatCard
             reverse={true}
