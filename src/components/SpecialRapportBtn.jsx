@@ -187,7 +187,7 @@ function SpecialRapportBtn({
       doc.save("RapportEngagement.pdf");
     } else {
       const doc = new jsPDF();
-      const mycols = ["Mois", "Entrées", "Dépenses", "Reste"];
+      const mycols = ["Mois","Offrandes", "Dimes", "Autres", "Total entrées", "Total dépenses", "Reste"];
       let mydatas = [];
       let dataWanted = realData?.point_mensuel;
 
@@ -196,6 +196,9 @@ function SpecialRapportBtn({
       dataWanted.map((dw) => {
         let datas = [
           dw.date,
+          formatNumberToMoney(dw.offrandes),
+          formatNumberToMoney(dw.dimes),
+          formatNumberToMoney(Number(dw.entrees - (dw.offrandes + dw.dimes))),
           formatNumberToMoney(dw.entrees),
           formatNumberToMoney(dw.depenses),
           formatNumberToMoney(Number(dw.entrees - dw.depenses)),
@@ -273,9 +276,17 @@ function SpecialRapportBtn({
             }
           );
           doc.text(
-            `Solde banque: ${formatNumberToMoney(realData?.banque)} FCFA`,
+            `Versement banque: ${formatNumberToMoney(realData?.banque_versement)} FCFA`,
             190,
             76,
+            {
+              align: "right",
+            }
+          );
+          doc.text(
+            `Solde banque: ${formatNumberToMoney(realData?.banque)} FCFA`,
+            190,
+            81,
             {
               align: "right",
             }

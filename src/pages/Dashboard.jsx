@@ -149,7 +149,7 @@ function Dashboard() {
     return datas;
   }
 
-  function formatEntreeDepenseDatasForRapport(data1, data2) {
+  function formatEntreeDepenseDatasForRapport(data1, data2, datas3, datas4) {
     let datas = [];
     data1?.forEach((item) => {
       data2?.forEach((item2) => {
@@ -160,19 +160,16 @@ function Dashboard() {
               selectedDateFin,
               item.date__month - 1
             ),
+            offrandes: datas3?.find(
+              (off) => off.date__month === item2.date__month
+            )?.entree_sum,
+            dimes: datas4?.find((dim) => dim.date__month === item2.date__month)
+              ?.entree_sum,
             entrees: item?.entree_sum,
             depenses: item2?.sortie_sum,
           };
           datas.push(data);
         }
-        // else {
-        //   const data = {
-        //     date: item.date__month,
-        //     Entree: item?.entree_sum,
-        //     Sortie: 0,
-        //   };
-        //   datas.push(data);
-        // }
       });
     });
 
@@ -259,10 +256,16 @@ function Dashboard() {
                   caisse: stats?.solde_caisse,
                   banque: stats?.solde_banque,
                   entree: stats?.entre_by_month,
-                  point_mensuel: formatEntreeDepenseDatasForRapport(stats?.entree_by_month, stats?.sortie_by_month),
+                  point_mensuel: formatEntreeDepenseDatasForRapport(
+                    stats?.entree_by_month,
+                    stats?.sortie_by_month,
+                    stats?.entree_offrande_for_last_6_month,
+                    stats?.entree_dime_for_last_6_month
+                  ),
                   autre_entree: stats?.total_entree_other,
                   entree_dime: stats?.entree_dime_for_last_6_month,
                   entree_offrance: stats?.entree_offrande_for_last_6_month,
+                  banque_versement: stats?.banque_versement,
                 }}
               />
             </Form>
