@@ -411,22 +411,22 @@ function Dashboard() {
                       <ListItem className="text-white">
                         M:{" "}
                         {formatNumberToMoney(
-                          stats?.entree_dime_for_last_2_month[1]?.entree_sum
+                          stats?.entree_dime_for_last_2_month[0]?.entree_sum
                         )}{" "}
                         FCFA
                       </ListItem>
                       <ListItem className="text-white">
                         M - 1:{" "}
                         {formatNumberToMoney(
-                          stats?.entree_dime_for_last_2_month[0]?.entree_sum
+                          stats?.entree_dime_for_last_2_month[1]?.entree_sum
                         )}{" "}
                         FCFA
                       </ListItem>
                       <ListItem className="text-white">
                         Taux de variation:{" "}
                         {calculateVariation(
-                          stats?.entree_dime_for_last_2_month[1]?.entree_sum,
-                          stats?.entree_dime_for_last_2_month[0]?.entree_sum
+                          stats?.entree_dime_for_last_2_month[0]?.entree_sum,
+                          stats?.entree_dime_for_last_2_month[1]?.entree_sum
                         )}{" "}
                         %
                       </ListItem>
@@ -447,23 +447,23 @@ function Dashboard() {
                       <ListItem className="text-white">
                         M:{" "}
                         {formatNumberToMoney(
-                          stats?.entree_offrande_for_last_2_month[1]?.entree_sum
+                          stats?.entree_offrande_for_last_2_month[0]?.entree_sum
                         )}{" "}
                         FCFA
                       </ListItem>
                       <ListItem className="text-white">
                         M - 1:{" "}
                         {formatNumberToMoney(
-                          stats?.entree_offrande_for_last_2_month[0]?.entree_sum
+                          stats?.entree_offrande_for_last_2_month[1]?.entree_sum
                         )}{" "}
                         FCFA
                       </ListItem>
                       <ListItem className="text-white">
                         Taux de variation:{" "}
                         {calculateVariation(
-                          stats?.entree_offrande_for_last_2_month[1]
+                          stats?.entree_offrande_for_last_2_month[0]
                             ?.entree_sum,
-                          stats?.entree_offrande_for_last_2_month[0]?.entree_sum
+                          stats?.entree_offrande_for_last_2_month[1]?.entree_sum
                         )}{" "}
                         %
                       </ListItem>
