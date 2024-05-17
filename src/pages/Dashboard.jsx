@@ -484,14 +484,14 @@ function Dashboard() {
                       <ListItem className="text-white">
                         M:{" "}
                         {formatNumberToMoney(
-                          stats?.depense_for_last_2_month[1]?.depense_sum
+                          stats?.depense_for_last_2_month[0]?.depense_sum
                         )}{" "}
                         FCFA
                       </ListItem>
                       <ListItem className="text-white">
                         M - 1:{" "}
                         {formatNumberToMoney(
-                          stats?.depense_for_last_2_month[0]?.depense_sum
+                          stats?.depense_for_last_2_month[1]?.depense_sum
                         )}{" "}
                         FCFA
                       </ListItem>
@@ -499,8 +499,8 @@ function Dashboard() {
                       <ListItem className="text-white">
                         Taux de variation:{" "}
                         {calculateVariation(
-                          stats?.depense_for_last_2_month[1]?.depense_sum,
-                          stats?.depense_for_last_2_month[0]?.depense_sum
+                          stats?.depense_for_last_2_month[0]?.depense_sum,
+                          stats?.depense_for_last_2_month[1]?.depense_sum
                         )}{" "}
                         %
                       </ListItem>
