@@ -107,6 +107,7 @@ function EngagementOverview() {
         title="Vue d'ensemble"
         prevActionButton={
           <SpecialRapportBtn
+            mode="engagement"
             realData={{
               nb_total: stats?.engagement_count,
               mt_engagement: stats?.engagement_sum,
