@@ -1,12 +1,12 @@
 import React from "react";
 import Layout from "../components/common/Layout";
 import PageContent from "../components/common/PageContent";
-import Table, { SelectColumnFilter } from "../components/Table";
-import {
-  // ArrowRightIcon,
-  PencilIcon,
-  TrashIcon,
-} from "@heroicons/react/24/solid";
+import Table from "../components/Table";
+// import {
+//   // ArrowRightIcon,
+//   PencilIcon,
+//   TrashIcon,
+// } from "@heroicons/react/24/solid";
 
 import { useDispatch, useSelector } from "react-redux";
 import { useAppContext } from "../context/AppState";
@@ -16,14 +16,14 @@ import { getTransferts } from "../features/transferts/transfertSlice";
 
 function Transferts() {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
+  // const { user } = useSelector((state) => state.auth);
   const { transferts } = useSelector((state) => state.transferts);
 
   React.useEffect(() => {
     dispatch(getTransferts());
   }, []);
 
-  console.log("transferts", transferts);
+  // console.log("transferts", transferts);
 
   const [formatedTransfets, setFormatedTransferts] = React.useState([]);
 
@@ -45,25 +45,28 @@ function Transferts() {
     switchSlideOver(true);
   };
 
-  const columns = React.useMemo(() => [
-    {
-      Header: "Date",
-      accessor: "f_date",
-    },
-    {
-      Header: "Montant",
-      accessor: "montant",
-    },
-    {
-      Header: "ID Client source",
-      accessor: "f_id_source",
-    },
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: "Date",
+        accessor: "f_date",
+      },
+      {
+        Header: "Montant",
+        accessor: "montant",
+      },
+      {
+        Header: "ID Client source",
+        accessor: "f_id_source",
+      },
 
-    {
-      Header: "ID Client destination",
-      accessor: "f_id_abonne",
-    },
-  ]);
+      {
+        Header: "ID Client destination",
+        accessor: "f_id_abonne",
+      },
+    ],
+    []
+  );
 
   React.useEffect(() => {
     if (transferts.length > 0) {
