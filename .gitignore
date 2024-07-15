@@ -32,13 +32,13 @@ src/pages/quotidien/*
 src/pages/settings/*
 
 # Ignore those components
-src/features/engagement/*
-src/features/finance/*
-src/features/quotidien/*
-src/features/settings/*
-src/components/engagement/*
-src/components/finance/*
-src/components/quotidien/*
-src/components/settings/*
+/src/features/engagement/*
+/src/features/finance/*
+/src/features/quotidien/*
+/src/features/settings/*
+/src/components/engagement/*
+/src/components/finance/*
+/src/components/quotidien/*
+/src/components/settings/*
 
 
