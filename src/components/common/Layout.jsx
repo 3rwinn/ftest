@@ -20,60 +20,37 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const navigationStaff = [
   {
-    name: "Dashboard",
-    href: "/dashboard",
+    name: "Transferts",
+    href: "/transferts",
     icon: HomeIcon,
     current: false,
   },
 
-  {
-    name: "Finances",
-    icon: BanknotesIcon,
-    current: false,
-    children: [
-      { name: "Entrées", href: "/finances/entrees" },
-      { name: "Sorties", href: "/finances/sorties" },
-      { name: "Suivi banque", href: "/finances/banque" },
-      // { name: "Reporting", href: "/finances/reporting" },
-      { name: "Fiche du dimanche", href: "/finances/fiche" },
-    ],
-  },
-  {
-    name: "Engagements",
-    icon: UserGroupIcon,
-    current: false,
-    children: [
-      { name: "Vue d'ensemble", href: "/engagements/overview" },
-      { name: "Attributions", href: "/engagements/attributions" },
-      { name: "Entrées", href: "/engagements/entrees" },
-      { name: "Dépenses", href: "/engagements/depenses" },
-      { name: "Reporting", href: "/engagements/reporting" },
-    ],
-  },
-  {
-    name: "Quotidien",
-    icon: CalendarIcon,
-    current: false,
-    children: [
-      { name: "Annuaire des membres", href: "/quotidien/membres" },
-      { name: "Suivi des nouveaux", href: "/quotidien/nouveaux" },
-      { name: "Evènements", href: "/quotidien/evenements" },
-      { name: "Communication", href: "/quotidien/communication" },
-    ],
-  },
-  {
-    name: "Paramètres",
-    href: "/settings",
-    icon: CogIcon,
-    current: false,
-    children: [
-      { name: "Missions", href: "/settings/missions" },
-      { name: "Paliers", href: "/settings/paliers" },
-      { name: "Types d'entrées", href: "/settings/entrees" },
-      { name: "Types de sorties", href: "/settings/sorties" },
-      { name: "Utilisateurs & rôles", href: "/settings/users" },
-    ],
-  },
+  // {
+  //   name: "Finances",
+  //   icon: BanknotesIcon,
+  //   current: false,
+  //   children: [
+  //     { name: "Entrées", href: "/finances/entrees" },
+  //     { name: "Sorties", href: "/finances/sorties" },
+  //     { name: "Suivi banque", href: "/finances/banque" },
+  //     // { name: "Reporting", href: "/finances/reporting" },
+  //     { name: "Fiche du dimanche", href: "/finances/fiche" },
+  //   ],
+  // },
+  // {
+  //   name: "Engagements",
+  //   icon: UserGroupIcon,
+  //   current: false,
+  //   children: [
+  //     { name: "Vue d'ensemble", href: "/engagements/overview" },
+  //     { name: "Attributions", href: "/engagements/attributions" },
+  //     { name: "Entrées", href: "/engagements/entrees" },
+  //     { name: "Dépenses", href: "/engagements/depenses" },
+  //     { name: "Reporting", href: "/engagements/reporting" },
+  //   ],
+  // },
+
 ];
 
 const navigationCommon = [
@@ -312,7 +289,8 @@ function Layout({ children }) {
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex flex-col flex-grow bg-ctam-primary pt-5 pb-4 overflow-y-auto">
             <div className="flex flex-col items-center flex-shrink-0 px-4">
-              <img className="h-14 w-auto" src={adsLogo} alt="CNAM logo" />
+              {/* <img className="h-14 w-auto" src={adsLogo} alt="CNAM logo" /> */}
+              <h1 className="text-white">FER</h1>
             </div>
             <nav
               className="mt-5 flex-1 flex flex-col divide-y divide-ctamp-800 overflow-y-auto"

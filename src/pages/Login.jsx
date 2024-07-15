@@ -27,7 +27,8 @@ export default function Login() {
       // user?.user?.is_staff
       //   ? navigate("/dashboard")
       //   : navigate("/engagements/overview");
-      navigate("/dashboard");
+      // navigate("/dashboard");
+      navigate("/transferts");
     }
   }, [user, navigate]);
 

@@ -23,3 +23,22 @@ dist-ssr
 *.sln
 *.sw?
 Dockerfile
+
+
+# Ignore those pages
+src/pages/engagements/*
+src/pages/finances/*
+src/pages/quotidien/*
+src/pages/settings/*
+
+# Ignore those components
+src/features/engagement/*
+src/features/finance/*
+src/features/quotidien/*
+src/features/settings/*
+src/components/engagement/*
+src/components/finance/*
+src/components/quotidien/*
+src/components/settings/*
+
+

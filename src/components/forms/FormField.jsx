@@ -1,3 +1,4 @@
+import React from "react";
 import { useFormikContext } from "formik";
 import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
 
@@ -5,9 +6,22 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function FormField({ label, name, type, caption, ...otherProps }) {
+function FormField({
+  label,
+  name,
+  type,
+  caption,
+  sideEvent = null,
+  ...otherProps
+}) {
   const { setFieldTouched, setFieldValue, errors, touched, values } =
     useFormikContext();
+
+  React.useState(() => {
+    if (sideEvent) {
+      sideEvent(values[name]);
+    }
+  }, [values, sideEvent]);
   return (
     <div className="mb-4">
       <label htmlFor={name} className="block text-sm font-medium text-mde-gray">
